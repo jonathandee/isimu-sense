@@ -1,13 +1,5 @@
 from . import db
 
-class InventoryCategory(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.String(255))
-
-    def __repr__(self):
-        return f"<InventoryCategory {self.name}>"
-
 class CropType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -16,7 +8,7 @@ class CropType(db.Model):
 
     def __repr__(self):
         return f"<CropType {self.name}>"
-    
+
 class Field(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -25,6 +17,8 @@ class Field(db.Model):
 
     def __repr__(self):
         return f"<Field {self.name}>"
+
+############# PLANTING
 
 class Planting(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -49,3 +43,90 @@ class Planting(db.Model):
 
     def __repr__(self):
         return f"<Planting {self.id}>"
+    
+############ APPLICATION
+
+class Application(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    planting_id = db.Column(
+        db.Integer,
+        db.ForeignKey('planting.id'),
+        nullable=False
+    )
+
+    inventory_item_id = db.Column(
+        db.Integer,
+        db.ForeignKey('inventory_item.id'),
+        nullable=True
+    )
+
+    date = db.Column(db.Date)
+
+    input_name = db.Column(db.String(200))
+
+    quantity = db.Column(db.Float)
+    unit = db.Column(db.String(50))   # 👈 add this
+
+    notes = db.Column(db.Text)
+
+    planting = db.relationship('Planting')
+    inventory_item = db.relationship('InventoryItem')
+
+def __repr__(self):
+    if self.inventory_item:
+        return f"<Application {self.inventory_item.name}>"
+    return f"<Application {self.input_name}>"
+
+############### INVENTORY
+
+class InventoryCategory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f"<InventoryCategory {self.name}>"
+
+class InventoryItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(200), nullable=False)
+
+    category_id = db.Column(
+        db.Integer,
+        db.ForeignKey('inventory_category.id')
+    )
+
+    quantity = db.Column(db.Float)
+    unit = db.Column(db.String(50))
+
+    category = db.relationship('InventoryCategory')
+
+    def __repr__(self):
+        return f"<InventoryItem {self.name}>"
+
+################# HARVEST
+
+class Harvest(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    planting_id = db.Column(
+        db.Integer,
+        db.ForeignKey('planting.id'),
+        nullable=False
+    )
+
+    date = db.Column(db.Date)
+
+    quantity = db.Column(db.Float)
+
+    unit = db.Column(db.String(50))
+
+    notes = db.Column(db.Text)
+
+    planting = db.relationship('Planting')
+
+    def __repr__(self):
+        return f"<Harvest {self.quantity} {self.unit}>"
+

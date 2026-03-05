@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Applications{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Crop Applications 🌱</h1>
+
+<p class="text-muted">Record fertilizer and chemical applications.</p>
+
+<hr>
+
+<h4>Add Application</h4>
+
+<form method="POST">
+
+    <div class="row">
+
+        <div class="col-md-2">
+            <select name="planting" class="form-control" required>
+
+                <option value="">Planting</option>
+
+                {% for planting in plantings %}
+                <option value="{{ planting.id }}">
+                    {{ planting.crop_type.name }} - {{ planting.field.name }}
+                </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select name="inventory_item" class="form-control">
+                <option value="">Inventory Item</option>
+
+                {% for item in inventory_items %}
+                <option value="{{ item.id }}">
+                    {{ item.name }} ({{ item.quantity }} {{ item.unit }})
+                </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <input type="text" name="input_name" class="form-control" placeholder="Manual input">
+        </div>
+
+        <div class="col-md-2">
+            <input type="number" step="0.01" name="quantity" class="form-control" placeholder="Quantity">
+        </div>
+
+        <div class="col-md-2">
+            <input type="date" name="date" class="form-control">
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-success w-100">Add</button>
+        </div>
+
+    </div>
+
+    <div class="mt-2">
+        <textarea name="notes" class="form-control" placeholder="Notes"></textarea>
+    </div>
+
+</form>
+
+<hr class="my-4">
+
+<h4>Application Records</h4>
+
+<table class="table table-striped">
+
+    <thead class="table-success">
+
+        <tr>
+            <th>Planting</th>
+            <th>Input</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th>Date</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for application in applications %}
+
+        <tr>
+
+            <td>
+                {{ application.planting.crop_type.name }}
+                - {{ application.planting.field.name }}
+            </td>
+
+            <td>
+                {% if application.inventory_item %}
+                {{ application.inventory_item.name }}
+                {% else %}
+                {{ application.input_name }}
+                {% endif %}
+            </td>
+
+            <td>{{ application.quantity }}</td>
+
+            <td>{{ application.inventory_item.unit }}</td>
+
+            <td>{{ application.date }}</td>
+
+        </tr>
+
+        {% else %}
+
+        <tr>
+            <td colspan="4" class="text-center text-muted">
+                No applications recorded
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+<div class="mt-4">
+
+    <a href="{{ url_for('main.crops') }}" class="btn btn-secondary">
+        ← Back to Crops
+    </a>
+
+</div>
+
+{% endblock %}

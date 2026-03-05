@@ -3,18 +3,47 @@
 {% block title %}Reports{% endblock %}
 
 {% block content %}
+
 <h1 class="mb-4">Reports 📊</h1>
 
-<p class="text-muted">
-    This module will generate farm performance reports
-    across crops, livestock, inventory, and finance.
-</p>
+<p class="text-muted">Farm analytics and performance insights.</p>
 
-<div class="alert alert-info mt-4">
-    Reports module structure coming in V2.
+<hr>
+
+<div class="row">
+
+    <!-- Crop Reports -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <h5 class="card-title">Crop Reports</h5>
+                <p class="card-text">Yield and production reports.</p>
+
+                <a href="{{ url_for('main.crop_reports') }}" class="btn btn-success">
+                    Open
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Reports -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <h5 class="card-title">Inventory Reports</h5>
+                <p class="card-text">Inventory usage and stock reports.</p>
+
+                <button class="btn btn-secondary" disabled>
+                    Coming Soon
+                </button>
+
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<a href="/dashboard" class="btn btn-secondary mt-4">
-    Back to Dashboard
-</a>
 {% endblock %}

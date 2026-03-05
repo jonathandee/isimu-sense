@@ -5,6 +5,11 @@ from .models import CropType
 from .models import Field
 from .models import Planting
 from datetime import datetime
+from .models import InventoryCategory
+from .models import InventoryItem
+from .models import Application
+from flask import flash  
+from .models import Harvest
 from . import db
 
 main = Blueprint("main", __name__)
@@ -17,14 +22,116 @@ def landing():
 def dashboard():
     return render_template("dashboard.html")
 
+##################################
+        # INVENTORY #
+##################################
+
 @main.route("/inventory")
 def inventory():
-    from .models import InventoryCategory
+    return render_template("inventory.html")
+
+@main.route("/inventory/categories", methods=["GET", "POST"])
+def inventory_categories():
+
+    if request.method == "POST":
+        name = request.form.get("name")
+
+        category = InventoryCategory(name=name)
+
+        db.session.add(category)
+        db.session.commit()
+
+        return redirect(url_for("main.inventory_categories"))
+
     categories = InventoryCategory.query.all()
-    return render_template("inventory.html", categories=categories)
+
+    return render_template(
+        "inventory_categories.html",
+        categories=categories
+    )
+
+@main.route("/inventory/categories/edit/<int:id>", methods=["POST"])
+def edit_inventory_category(id):
+
+    category = InventoryCategory.query.get_or_404(id)
+
+    category.name = request.form.get("name")
+
+    db.session.commit()
+
+    return redirect(url_for("main.inventory_categories"))
+
+@main.route("/inventory/categories/delete/<int:id>")
+def delete_inventory_category(id):
+
+    category = InventoryCategory.query.get_or_404(id)
+
+    db.session.delete(category)
+    db.session.commit()
+
+    return redirect(url_for("main.inventory_categories"))
+
+############ INVENTORY ITEMS ###########
+
+@main.route("/inventory/items", methods=["GET", "POST"])
+def inventory_items():
+
+    categories = InventoryCategory.query.all()
+
+    if request.method == "POST":
+
+        name = request.form.get("name")
+        category_id = request.form.get("category")
+        quantity = request.form.get("quantity")
+        unit = request.form.get("unit")
+
+        item = InventoryItem(
+            name=name,
+            category_id=category_id,
+            quantity=quantity,
+            unit=unit
+        )
+
+        db.session.add(item)
+        db.session.commit()
+
+        return redirect(url_for("main.inventory_items"))
+
+    items = InventoryItem.query.all()
+
+    return render_template(
+        "inventory_items.html",
+        items=items,
+        categories=categories
+    )
+
+@main.route("/inventory/items/edit/<int:id>", methods=["POST"])
+def edit_inventory_item(id):
+
+    item = InventoryItem.query.get_or_404(id)
+
+    item.name = request.form.get("name")
+    item.category_id = request.form.get("category")
+    item.quantity = request.form.get("quantity")
+    item.unit = request.form.get("unit")
+
+    db.session.commit()
+
+    return redirect(url_for("main.inventory_items"))
+
+@main.route("/inventory/items/delete/<int:id>")
+def delete_inventory_item(id):
+
+    item = InventoryItem.query.get_or_404(id)
+
+    db.session.delete(item)
+    db.session.commit()
+
+    return redirect(url_for("main.inventory_items"))
+
 
 #############################################
-            #CROPS MODULE#
+                #CROPS MODULE#
 #############################################
 
 @main.route("/crops")
@@ -78,7 +185,7 @@ def edit_crop_type(id):
     return redirect(url_for("main.crop_types"))
 
 #############################################
-            #FIELDS MODULE#
+                #FIELDS MODULE#
 #############################################
 
 @main.route("/crops/fields", methods=["GET", "POST"])
@@ -104,7 +211,7 @@ def fields():
 
     return render_template("fields.html", fields=fields)
 
-######### DELETE #############
+############ DELETE #############
 
 @main.route("/crops/fields/delete/<int:id>")
 def delete_field(id):
@@ -207,6 +314,140 @@ def delete_planting(id):
     return redirect(url_for("main.plantings"))
 
 
+##############################################
+            ######APPLICATIONS########
+##############################################
+
+@main.route("/crops/applications", methods=["GET", "POST"])
+def applications():
+
+    plantings = Planting.query.all()
+    inventory_items = InventoryItem.query.all()
+
+    if request.method == "POST":
+
+        planting_id = request.form.get("planting")
+        inventory_item_id = request.form.get("inventory_item")
+        input_name = request.form.get("input_name")
+        quantity = float(request.form.get("quantity"))
+        date_str = request.form.get("date")
+        date = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else None
+        notes = request.form.get("notes")
+        
+        unit = None
+
+        if inventory_item_id:
+
+            item = InventoryItem.query.get(inventory_item_id)
+
+            # 🚨 Prevent negative stock
+            if item.quantity < quantity:
+                flash(f"Not enough {item.name} in inventory", "danger")
+                return redirect(url_for("main.applications"))
+
+            item.quantity -= quantity
+            unit = item.unit
+
+        application = Application(
+            planting_id=planting_id,
+            inventory_item_id=inventory_item_id if inventory_item_id else None,
+            input_name=input_name,
+            quantity=quantity,
+            date=date,
+            notes=notes
+        )
+
+        db.session.add(application)
+
+        # 🔥 Automatic inventory deduction
+        if inventory_item_id:
+            item = InventoryItem.query.get(inventory_item_id)
+            item.quantity -= quantity
+
+        db.session.commit()
+
+        return redirect(url_for("main.applications"))
+
+    applications = Application.query.all()
+
+    return render_template(
+        "applications.html",
+        applications=applications,
+        plantings=plantings,
+        inventory_items=inventory_items
+    )
+
+##################################
+            # HARVEST #
+##################################
+
+@main.route("/crops/harvest", methods=["GET", "POST"])
+def harvest():
+
+    plantings = Planting.query.all()
+
+    if request.method == "POST":
+
+        planting_id = request.form.get("planting")
+        quantity = float(request.form.get("quantity"))
+        unit = request.form.get("unit")
+
+        date_str = request.form.get("date")
+        date = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else None
+
+        notes = request.form.get("notes")
+
+        harvest = Harvest(
+            planting_id=planting_id,
+            quantity=quantity,
+            unit=unit,
+            date=date,
+            notes=notes
+        )
+
+        db.session.add(harvest)
+        db.session.commit()
+
+        return redirect(url_for("main.harvest"))
+
+    harvests = Harvest.query.all()
+
+    return render_template(
+        "harvest.html",
+        harvests=harvests,
+        plantings=plantings
+    )
+
+@main.route("/crops/harvest/edit/<int:id>", methods=["POST"])
+def edit_harvest(id):
+
+    harvest = Harvest.query.get_or_404(id)
+
+    harvest.planting_id = request.form.get("planting")
+    harvest.quantity = float(request.form.get("quantity"))
+    harvest.unit = request.form.get("unit")
+
+    date_str = request.form.get("date")
+    harvest.date = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else None
+
+    harvest.notes = request.form.get("notes")
+
+    db.session.commit()
+
+    return redirect(url_for("main.harvest"))
+
+
+@main.route("/crops/harvest/delete/<int:id>")
+def delete_harvest(id):
+
+    harvest = Harvest.query.get_or_404(id)
+
+    db.session.delete(harvest)
+    db.session.commit()
+
+    return redirect(url_for("main.harvest"))
+
+   
 #############################################
             #LIVESTOCK MODULE#
 #############################################
@@ -219,6 +460,22 @@ def livestock():
 def finance():
     return render_template("finance.html")
 
+#############################################
+            #REPORTS MODULE#
+#############################################
+
 @main.route("/reports")
 def reports():
     return render_template("reports.html")
+
+
+@main.route("/reports/crops")
+def crop_reports():
+
+    harvests = Harvest.query.all()
+
+    return render_template(
+        "crop_reports.html",
+        harvests=harvests
+    )
+    
