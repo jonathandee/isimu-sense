@@ -20,7 +20,22 @@ def landing():
 
 @main.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
+
+    active_plantings = Planting.query.filter_by(status="active").count()
+
+    total_harvest = db.session.query(db.func.sum(Harvest.quantity)).scalar() or 0
+
+    inventory_count = InventoryItem.query.count()
+
+    field_count = Field.query.count()
+
+    return render_template(
+        "dashboard.html",
+        active_plantings=active_plantings,
+        total_harvest=total_harvest,
+        inventory_count=inventory_count,
+        field_count=field_count
+    )
 
 ##################################
         # INVENTORY #
@@ -263,6 +278,13 @@ def plantings():
             "%Y-%m-%d"
         )
 
+        # 🚫 Prevent planting on already planted field
+        existing = Planting.query.filter_by(field_id=field_id, status="active").first()
+
+        if existing:
+            flash("This field already has an active planting.", "danger")
+            return redirect(url_for("main.plantings"))
+
         new_planting = Planting(
             crop_type_id=crop_type_id,
             field_id=field_id,
@@ -283,36 +305,21 @@ def plantings():
         crops=crops,
         fields=fields
     )
+    
+############### STATUS ##############
 
-############### EDIT ##############
-
-@main.route("/crops/plantings/edit/<int:id>", methods=["POST"])
-def edit_planting(id):
-
-    planting = Planting.query.get_or_404(id)
-
-    planting.crop_type_id = request.form.get("crop_type")
-    planting.field_id = request.form.get("field")
-
-    planting.planting_date = request.form.get("planting_date")
-    planting.expected_harvest = request.form.get("expected_harvest")
-
-    db.session.commit()
-
-    return redirect(url_for("main.plantings"))
-
-############# DELETE ##############
-
-@main.route("/crops/plantings/delete/<int:id>")
-def delete_planting(id):
+@main.route("/crops/plantings/complete/<int:id>")
+def complete_planting(id):
 
     planting = Planting.query.get_or_404(id)
 
-    db.session.delete(planting)
+    planting.status = "completed"
+
     db.session.commit()
 
-    return redirect(url_for("main.plantings"))
+    flash("Planting marked as completed.", "success")
 
+    return redirect(url_for("main.plantings"))
 
 ##############################################
             ######APPLICATIONS########
@@ -330,12 +337,21 @@ def applications():
         inventory_item_id = request.form.get("inventory_item")
         input_name = request.form.get("input_name")
         quantity = float(request.form.get("quantity"))
+
         date_str = request.form.get("date")
         date = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else None
-        notes = request.form.get("notes")
-        
-        unit = None
 
+        notes = request.form.get("notes")
+
+        # 🔎 Get planting
+        planting = Planting.query.get(planting_id)
+
+        # 🚫 Prevent application before planting
+        if date and date < planting.planting_date:
+            flash("Application date cannot be before the planting date.", "danger")
+            return redirect(url_for("main.applications"))
+
+        # Handle inventory
         if inventory_item_id:
 
             item = InventoryItem.query.get(inventory_item_id)
@@ -345,8 +361,8 @@ def applications():
                 flash(f"Not enough {item.name} in inventory", "danger")
                 return redirect(url_for("main.applications"))
 
+            # 🔥 Deduct inventory
             item.quantity -= quantity
-            unit = item.unit
 
         application = Application(
             planting_id=planting_id,
@@ -358,12 +374,6 @@ def applications():
         )
 
         db.session.add(application)
-
-        # 🔥 Automatic inventory deduction
-        if inventory_item_id:
-            item = InventoryItem.query.get(inventory_item_id)
-            item.quantity -= quantity
-
         db.session.commit()
 
         return redirect(url_for("main.applications"))
@@ -376,6 +386,62 @@ def applications():
         plantings=plantings,
         inventory_items=inventory_items
     )
+
+############# EDIT ###############
+
+@main.route("/crops/applications/edit/<int:id>", methods=["POST"])
+def edit_application(id):
+
+    application = Application.query.get_or_404(id)
+
+    old_quantity = application.quantity
+    inventory_item_id = application.inventory_item_id
+
+    new_quantity = float(request.form.get("quantity"))
+
+    date_str = request.form.get("date")
+    if date_str:
+        application.date = datetime.strptime(date_str, "%Y-%m-%d").date()
+
+    application.input_name = request.form.get("input_name")
+    application.notes = request.form.get("notes")
+
+    if inventory_item_id:
+
+        item = InventoryItem.query.get(inventory_item_id)
+
+        # Step 1: return old quantity
+        item.quantity += old_quantity
+
+        # Step 2: check if enough stock for new quantity
+        if item.quantity < new_quantity:
+            flash(f"Not enough {item.name} in inventory", "danger")
+            return redirect(url_for("main.applications"))
+
+        # Step 3: deduct new quantity
+        item.quantity -= new_quantity
+
+    application.quantity = new_quantity
+
+    db.session.commit()
+
+    return redirect(url_for("main.applications"))
+
+########### DELETE ###############
+
+@main.route("/crops/applications/delete/<int:id>")
+def delete_application(id):
+
+    application = Application.query.get_or_404(id)
+
+    if application.inventory_item_id:
+        item = InventoryItem.query.get(application.inventory_item_id)
+        item.quantity += application.quantity
+
+    db.session.delete(application)
+    db.session.commit()
+
+    return redirect(url_for("main.applications"))
 
 ##################################
             # HARVEST #
@@ -397,6 +463,14 @@ def harvest():
 
         notes = request.form.get("notes")
 
+        # 🔎 Get the planting record
+        planting = Planting.query.get(planting_id)
+
+        # 🚫 Prevent harvest before planting date
+        if date and date < planting.planting_date:
+            flash("Harvest date cannot be before the planting date.", "danger")
+            return redirect(url_for("main.harvest"))
+
         harvest = Harvest(
             planting_id=planting_id,
             quantity=quantity,
@@ -417,6 +491,8 @@ def harvest():
         harvests=harvests,
         plantings=plantings
     )
+
+################ EDIT ##################
 
 @main.route("/crops/harvest/edit/<int:id>", methods=["POST"])
 def edit_harvest(id):

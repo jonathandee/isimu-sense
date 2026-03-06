@@ -5,6 +5,46 @@
 {% block content %}
 <h1 class="mb-4">Farm Management Dashboard</h1>
 
+<div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+        <div class="card text-bg-success shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Active Plantings</h6>
+                <h3>{{ active_plantings }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-primary shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Total Harvest</h6>
+                <h3>{{ total_harvest }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-warning shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Inventory Items</h6>
+                <h3>{{ inventory_count }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-secondary shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Fields</h6>
+                <h3>{{ field_count }}</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 <div class="row g-4">
 
     <!-- 1. Crops -->

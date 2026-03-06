@@ -38,6 +38,9 @@ class Planting(db.Model):
     planting_date = db.Column(db.Date)
     expected_harvest = db.Column(db.Date)
 
+    # NEW COLUMN
+    status = db.Column(db.String(20), default="active")
+
     crop_type = db.relationship('CropType')
     field = db.relationship('Field')
 
