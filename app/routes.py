@@ -874,6 +874,21 @@ def breeding_events():
         females=females
     )
 
+######### EDIT BREEDING
+
+@main.route("/breeding/edit/<int:id>", methods=["POST"])
+def edit_breeding_event(id):
+
+    event = BreedingEvent.query.get_or_404(id)
+
+    event.breeding_date = request.form.get("breeding_date")
+    event.expected_birth = request.form.get("expected_birth")
+    event.notes = request.form.get("notes")
+
+    db.session.commit()
+
+    return redirect(url_for("main.breeding_events"))
+
 ########### BIRTH RECORD ###########
 
 @main.route("/livestock/breeding/births", methods=["GET", "POST"])
@@ -884,6 +899,8 @@ def births():
     if request.method == "POST":
 
         breeding_event_id = request.form.get("breeding_event")
+        if not breeding_event_id:
+            return redirect(url_for("main.birth_records"))
 
         birth_date_str = request.form.get("birth_date")
         birth_date = datetime.strptime(

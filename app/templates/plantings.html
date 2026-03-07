@@ -14,65 +14,69 @@
 
 <form method="POST">
 
-    <div class="mb-3">
-        <label class="form-label">Crop Type</label>
-        <select name="crop_type" class="form-control" required>
-            <option value="">Select Crop</option>
+    <div class="row">
 
-            {% for crop in crops %}
-            <option value="{{ crop.id }}">
-                {{ crop.name }} {% if crop.variety %} ({{ crop.variety }}) {% endif %}
-            </option>
-            {% endfor %}
+        <div class="col-md-3">
+            <select name="crop_type" class="form-control" required>
+                <option value="">Crop</option>
 
-        </select>
+                {% for crop in crops %}
+                <option value="{{ crop.id }}">
+                    {{ crop.name }}{% if crop.variety %} ({{ crop.variety }}){% endif %}
+                </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select name="field" class="form-control" required>
+                <option value="">Field</option>
+
+                {% for field in fields %}
+                <option value="{{ field.id }}">
+                    {{ field.name }}
+                </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <input type="date" name="planting_date" class="form-control" required>
+        </div>
+
+        <div class="col-md-2">
+            <input type="date" name="expected_harvest" class="form-control">
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-success w-100">
+                Add
+            </button>
+        </div>
+
     </div>
-
-    <div class="mb-3">
-        <label class="form-label">Field</label>
-        <select name="field" class="form-control" required>
-            <option value="">Select Field</option>
-
-            {% for field in fields %}
-            <option value="{{ field.id }}">
-                {{ field.name }}
-            </option>
-            {% endfor %}
-
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Planting Date</label>
-        <input type="date" name="planting_date" class="form-control" required>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Expected Harvest</label>
-        <input type="date" name="expected_harvest" class="form-control">
-    </div>
-
-    <button type="submit" class="btn btn-success">
-        Add Planting
-    </button>
 
 </form>
 
 <hr class="my-4">
 
-<h4>Existing Plantings</h4>
+<h4>Planting Records</h4>
 
 <table class="table table-striped">
 
     <thead class="table-success">
+
         <tr>
             <th>Crop</th>
             <th>Field</th>
             <th>Planting Date</th>
             <th>Expected Harvest</th>
             <th>Status</th>
-            <th>Action</th>
+            <th>Actions</th>
         </tr>
+
     </thead>
 
     <tbody>
@@ -92,7 +96,13 @@
 
             <td>{{ planting.planting_date }}</td>
 
-            <td>{{ planting.expected_harvest }}</td>
+            <td>
+                {% if planting.expected_harvest %}
+                {{ planting.expected_harvest }}
+                {% else %}
+                <span class="text-muted">-</span>
+                {% endif %}
+            </td>
 
             <td>
                 {% if planting.status == "active" %}
@@ -107,11 +117,15 @@
                 {% if planting.status == "active" %}
 
                 <a href="{{ url_for('main.complete_planting', id=planting.id) }}" class="btn btn-sm btn-warning">
+
                     Complete
+
                 </a>
 
                 {% else %}
-                —
+
+                <span class="text-muted">—</span>
+
                 {% endif %}
 
             </td>
@@ -121,8 +135,8 @@
         {% else %}
 
         <tr>
-            <td colspan="6" class="text-muted text-center">
-                No plantings recorded yet.
+            <td colspan="6" class="text-center text-muted">
+                No plantings recorded
             </td>
         </tr>
 
@@ -131,8 +145,15 @@
     </tbody>
 
 </table>
-<a href="{{ url_for('main.crops') }}" class="btn btn-secondary mt-4">
-    Back to Crops Module
-</a>
+
+<div class="mt-4">
+
+    <a href="{{ url_for('main.crops') }}" class="btn btn-secondary">
+
+        ← Back to Crops
+
+    </a>
+
+</div>
 
 {% endblock %}

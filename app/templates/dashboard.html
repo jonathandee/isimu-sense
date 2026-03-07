@@ -3,7 +3,10 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+
 <h1 class="mb-4">Farm Management Dashboard</h1>
+
+<!-- ANALYSIS CARDS -->
 
 <div class="row g-4 mb-4">
 
@@ -43,77 +46,101 @@
         </div>
     </div>
 
+    <!-- NEW MODULE ANALYTICS -->
+
+    <div class="col-md-3">
+        <div class="card text-bg-info shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Total Animals</h6>
+                <h3>{{ total_animals }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-dark shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Total Income</h6>
+                <h3>{{ total_income }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-danger shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Total Expenses</h6>
+                <h3>{{ total_expenses }}</h3>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<!-- MODULE CARDS -->
 
 <div class="row g-4">
 
-    <!-- 1. Crops -->
+    <!-- Crops -->
+
     <div class="col-md-4">
         <div class="card shadow-sm">
             <div class="card-body">
                 <h5 class="card-title">Crops</h5>
                 <p class="card-text">Manage crop production and tracking.</p>
-                <a href="/crops" class="btn btn-success">
-                    Open
-                </a>
+                <a href="{{ url_for('main.crops') }}" class="btn btn-success">Open</a>
             </div>
         </div>
     </div>
 
-    <!-- 2. Livestock -->
+    <!-- Livestock -->
+
     <div class="col-md-4">
         <div class="card shadow-sm">
             <div class="card-body">
                 <h5 class="card-title">Livestock</h5>
                 <p class="card-text">Track animals and production data.</p>
-                <a href="/livestock" class="btn btn-success">
-                    Open
-                </a>
+                <a href="{{ url_for('main.livestock') }}" class="btn btn-success">Open</a>
             </div>
         </div>
     </div>
 
-    <!-- 3. Inventory -->
+    <!-- Inventory -->
+
     <div class="col-md-4">
         <div class="card shadow-sm">
             <div class="card-body">
                 <h5 class="card-title">Inventory</h5>
                 <p class="card-text">Manage farm inventory and supplies.</p>
-                <a href="{{ url_for('main.inventory') }}" class="btn btn-success">
-                    Open
-                </a>
+                <a href="{{ url_for('main.inventory') }}" class="btn btn-success">Open</a>
             </div>
         </div>
     </div>
 
-    <!-- 4. Finance -->
+    <!-- Finance -->
+
     <div class="col-md-4">
         <div class="card shadow-sm">
             <div class="card-body">
                 <h5 class="card-title">Finance</h5>
                 <p class="card-text">Monitor income and expenses.</p>
-                <a href="{{ url_for('main.finance') }}" class="btn btn-success">
-                    Open
-                </a>
+                <a href="{{ url_for('main.finance') }}" class="btn btn-success">Open</a>
             </div>
         </div>
     </div>
 
-    <!-- 5. Reports -->
+    <!-- Reports -->
+
     <div class="col-md-4">
         <div class="card shadow-sm">
             <div class="card-body">
-
                 <h5 class="card-title">Reports</h5>
                 <p class="card-text">Farm analytics and performance reports.</p>
-
-                <a href="{{ url_for('main.reports') }}" class="btn btn-success">
-                    Open
-                </a>
-
+                <a href="{{ url_for('main.reports') }}" class="btn btn-success">Open</a>
             </div>
         </div>
     </div>
 
 </div>
+
 {% endblock %}

@@ -6,65 +6,71 @@
 
 <h1 class="mb-4">Weight Records ⚖️</h1>
 
+<p class="text-muted">Track animal weight measurements over time.</p>
+
+<hr>
+
 <h4>Record Weight</h4>
 
 <form method="POST">
 
-    <div class="mb-3">
-        <label class="form-label">Animal</label>
+    <div class="row">
 
-        <select name="animal" class="form-control">
+        <div class="col-md-3">
+            <select name="animal" class="form-control">
 
-            <option value="">Select Animal</option>
+                <option value="">Animal</option>
 
-            {% for animal in animals %}
+                {% for animal in animals %}
+                <option value="{{ animal.id }}">
+                    {{ animal.tag_number }} - {{ animal.animal_type.name }}
+                </option>
+                {% endfor %}
 
-            <option value="{{ animal.id }}">
-                {{ animal.tag_number }} - {{ animal.animal_type.name }}
-            </option>
+            </select>
+        </div>
 
-            {% endfor %}
+        <div class="col-md-2">
+            <input type="number" step="0.01" name="weight" class="form-control" placeholder="Weight">
+        </div>
 
-        </select>
+        <div class="col-md-2">
+            <input type="text" name="unit" class="form-control" placeholder="Unit (kg)">
+        </div>
+
+        <div class="col-md-2">
+            <input type="date" name="date" class="form-control">
+        </div>
+
+        <div class="col-md-1">
+            <button class="btn btn-success w-100">
+                Add
+            </button>
+        </div>
 
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Weight</label>
-        <input type="number" step="0.01" name="weight" class="form-control">
+    <div class="mt-2">
+        <textarea name="notes" class="form-control" placeholder="Notes"></textarea>
     </div>
-
-    <div class="mb-3">
-        <label class="form-label">Unit</label>
-        <input type="text" name="unit" class="form-control" placeholder="kg">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Date</label>
-        <input type="date" name="date" class="form-control">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Notes</label>
-        <textarea name="notes" class="form-control"></textarea>
-    </div>
-
-    <button class="btn btn-success">
-        Record Weight
-    </button>
 
 </form>
 
-<hr>
+<hr class="my-4">
+
+<h4>Weight Records</h4>
 
 <table class="table table-striped">
 
     <thead class="table-success">
+
         <tr>
             <th>Animal</th>
             <th>Weight</th>
             <th>Date</th>
+            <th>Actions</th>
         </tr>
+
     </thead>
 
     <tbody>
@@ -79,13 +85,92 @@
 
             <td>{{ w.date }}</td>
 
+            <td>
+
+                <a href="#" data-bs-toggle="modal" data-bs-target="#editWeightModal{{ w.id }}" class="text-primary">
+
+                    <i class="bi bi-pencil"></i>
+
+                </a>
+
+            </td>
+
         </tr>
+
+        <!-- Edit Weight Modal -->
+
+        <div class="modal fade" id="editWeightModal{{ w.id }}" tabindex="-1">
+
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+
+                        <h5 class="modal-title">Edit Weight Record</h5>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                    </div>
+
+                    <form method="POST" action="{{ url_for('main.edit_weight', id=w.id) }}">
+
+                        <div class="modal-body">
+
+                            <div class="mb-3">
+                                <label>Weight</label>
+
+                                <input type="number" step="0.01" name="weight" class="form-control"
+                                    value="{{ w.weight }}">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Unit</label>
+
+                                <input type="text" name="unit" class="form-control" value="{{ w.unit }}">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Date</label>
+
+                                <input type="date" name="date" class="form-control" value="{{ w.date }}">
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Notes</label>
+
+                                <textarea name="notes" class="form-control">{{ w.notes }}</textarea>
+
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+                                Cancel
+
+                            </button>
+
+                            <button type="submit" class="btn btn-success">
+
+                                Save Changes
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
 
         {% else %}
 
         <tr>
-            <td colspan="3" class="text-center text-muted">
-                No weight records yet
+            <td colspan="4" class="text-center text-muted">
+                No weight records recorded
             </td>
         </tr>
 
@@ -95,8 +180,14 @@
 
 </table>
 
-<a href="{{ url_for('main.livestock') }}" class="btn btn-secondary mt-4">
-    Back to Livestock
-</a>
+<div class="mt-4">
+
+    <a href="{{ url_for('main.livestock') }}" class="btn btn-secondary">
+
+        ← Back to Livestock
+
+    </a>
+
+</div>
 
 {% endblock %}

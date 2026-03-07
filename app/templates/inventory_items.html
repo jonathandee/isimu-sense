@@ -12,35 +12,39 @@
 
 <h4>Add Item</h4>
 
-<form method="POST">
+<form method="POST" id="itemForm">
 
     <div class="row">
 
         <div class="col-md-3">
-            <input type="text" name="name" class="form-control" placeholder="Item name" required>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Item name" required>
         </div>
 
         <div class="col-md-3">
-            <select name="category" class="form-control" required>
+            <select name="category" id="category" class="form-control" required>
+
                 <option value="">Category</option>
 
                 {% for category in categories %}
-                <option value="{{ category.id }}">{{ category.name }}</option>
+                <option value="{{ category.id }}">
+                    {{ category.name }}
+                </option>
                 {% endfor %}
 
             </select>
         </div>
 
         <div class="col-md-2">
-            <input type="number" step="0.01" name="quantity" class="form-control" placeholder="Quantity">
+            <input type="number" step="0.01" name="quantity" id="quantity" class="form-control" placeholder="Quantity"
+                min="0" required>
         </div>
 
         <div class="col-md-2">
-            <input type="text" name="unit" class="form-control" placeholder="Unit (kg, L)">
+            <input type="text" name="unit" id="unit" class="form-control" placeholder="Unit (kg, L)" required>
         </div>
 
         <div class="col-md-2">
-            <button type="submit" class="btn btn-success w-100">
+            <button class="btn btn-success w-100">
                 Add
             </button>
         </div>
@@ -74,26 +78,42 @@
         <tr>
 
             <td>{{ item.name }}</td>
-            <td>{{ item.category.name }}</td>
+
+            <td>
+                {% if item.category %}
+                {{ item.category.name }}
+                {% else %}
+                <span class="text-muted">Uncategorized</span>
+                {% endif %}
+            </td>
+
             <td>{{ item.quantity }}</td>
+
             <td>{{ item.unit }}</td>
 
             <td>
 
                 <a href="#" data-bs-toggle="modal" data-bs-target="#editItemModal{{ item.id }}"
                     class="text-primary me-3">
+
                     <i class="bi bi-pencil"></i>
+
                 </a>
 
                 <a href="#" data-bs-toggle="modal" data-bs-target="#deleteItemModal{{ item.id }}" class="text-danger">
+
                     <i class="bi bi-trash"></i>
+
                 </a>
 
             </td>
 
         </tr>
+
         <!-- Edit Item Modal -->
+
         <div class="modal fade" id="editItemModal{{ item.id }}" tabindex="-1">
+
             <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -113,6 +133,7 @@
 
                             <div class="mb-3">
                                 <label>Category</label>
+
                                 <select name="category" class="form-control">
 
                                     {% for category in categories %}
@@ -123,12 +144,13 @@
                                     {% endfor %}
 
                                 </select>
+
                             </div>
 
                             <div class="mb-3">
                                 <label>Quantity</label>
                                 <input type="number" step="0.01" name="quantity" class="form-control"
-                                    value="{{ item.quantity }}">
+                                    value="{{ item.quantity }}" min="0">
                             </div>
 
                             <div class="mb-3">
@@ -156,8 +178,10 @@
             </div>
         </div>
 
-        <!-- Delete Confirmation -->
+        <!-- Delete Modal -->
+
         <div class="modal fade" id="deleteItemModal{{ item.id }}" tabindex="-1">
+
             <div class="modal-dialog">
                 <div class="modal-content">
 
@@ -176,7 +200,7 @@
 
                     <div class="modal-footer">
 
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">
                             Cancel
                         </button>
 
@@ -194,7 +218,7 @@
 
         <tr>
             <td colspan="5" class="text-center text-muted">
-                No inventory items yet
+                No inventory items recorded
             </td>
         </tr>
 
@@ -207,9 +231,52 @@
 <div class="mt-4">
 
     <a href="{{ url_for('main.inventory') }}" class="btn btn-secondary">
+
         ← Back to Inventory
+
     </a>
 
 </div>
+
+<script>
+
+    /* Inventory item validation */
+
+    let form = document.getElementById("itemForm");
+
+    form.addEventListener("submit", function (e) {
+
+        let name = document.getElementById("name").value.trim();
+        let category = document.getElementById("category").value;
+        let quantity = document.getElementById("quantity").value;
+        let unit = document.getElementById("unit").value.trim();
+
+        if (!name) {
+            alert("Item name is required.");
+            e.preventDefault();
+            return;
+        }
+
+        if (!category) {
+            alert("Please select a category.");
+            e.preventDefault();
+            return;
+        }
+
+        if (!quantity || quantity < 0) {
+            alert("Quantity must be zero or greater.");
+            e.preventDefault();
+            return;
+        }
+
+        if (!unit) {
+            alert("Unit is required.");
+            e.preventDefault();
+            return;
+        }
+
+    });
+
+</script>
 
 {% endblock %}
