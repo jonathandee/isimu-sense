@@ -1,4 +1,5 @@
 from . import db
+from datetime import datetime
 
 class CropType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -246,73 +247,6 @@ class AnimalExit(db.Model):
         return f"<AnimalExit {self.exit_type}>"
     
 
-####################################
-######### FEED MANAGEMENT ##########
-####################################
-
-class FeedRecord(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-
-    animal_id = db.Column(
-        db.Integer,
-        db.ForeignKey('animal.id'),
-        nullable=False
-    )
-
-    inventory_item_id = db.Column(
-        db.Integer,
-        db.ForeignKey('inventory_item.id')
-    )
-
-    quantity = db.Column(db.Float)
-
-    unit = db.Column(db.String(20))
-
-    date = db.Column(db.Date)
-
-    notes = db.Column(db.Text)
-
-    animal = db.relationship('Animal')
-    inventory_item = db.relationship('InventoryItem')
-
-    def __repr__(self):
-        return f"<FeedRecord {self.quantity}>"
-
-
-########### HEALT RECORD ##########
-
-class HealthRecord(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-
-    animal_id = db.Column(
-        db.Integer,
-        db.ForeignKey('animal.id'),
-        nullable=False
-    )
-
-    inventory_item_id = db.Column(
-        db.Integer,
-        db.ForeignKey('inventory_item.id')
-    )
-
-    issue = db.Column(db.String(200))  # illness or treatment
-    medication = db.Column(db.String(200))
-
-    quantity = db.Column(db.Float)
-    unit = db.Column(db.String(20))
-
-    weight = db.Column(db.Float)  # optional weight during treatment
-
-    date = db.Column(db.Date)
-
-    notes = db.Column(db.Text)
-
-    animal = db.relationship('Animal')
-    inventory_item = db.relationship('InventoryItem')
-
-    def __repr__(self):
-        return f"<HealthRecord {self.issue}>"
-
 ############ BREEDING RECORD ##############
 
 class BreedingEvent(db.Model):
@@ -375,5 +309,114 @@ class Birth(db.Model):
         return f"<Birth {self.id}>"
 
 
+##################################
+#       FEEDING RECORDS          #
+##################################
+
+class FeedType(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(100), nullable=False)
+
+    default_unit = db.Column(db.String(20))
+
+    notes = db.Column(db.Text)
+
+    def __repr__(self):
+        return f"<FeedType {self.name}>"
 
 
+class FeedRecord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    animal_id = db.Column(
+        db.Integer,
+        db.ForeignKey('animal.id'),
+        nullable=False
+    )
+
+    feed_type_id = db.Column(
+        db.Integer,
+        db.ForeignKey('feed_type.id')
+    )
+
+    quantity = db.Column(db.Float)
+
+    unit = db.Column(db.String(20))
+
+    date = db.Column(db.Date)
+
+    notes = db.Column(db.Text)
+
+    animal = db.relationship("Animal")
+    feed_type = db.relationship("FeedType")
+
+    def __repr__(self):
+        return f"<FeedRecord {self.id}>"
+    
+
+#################################
+#       HEALTH MANAGEMENT       #
+#################################
+
+class HealthRecord(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    animal_id = db.Column(
+        db.Integer,
+        db.ForeignKey('animal.id'),
+        nullable=False
+    )
+
+    condition = db.Column(db.String(150))
+
+    treatment = db.Column(db.String(150))
+
+    medication = db.Column(db.String(150))
+
+    date = db.Column(db.Date)
+
+    notes = db.Column(db.Text)
+
+    animal = db.relationship("Animal")
+
+    def __repr__(self):
+        return f"<HealthRecord {self.id}>"
+
+
+#############################
+#           FINANCE         #
+#############################
+
+class FinanceTransaction(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    type = db.Column(db.String(20))
+
+    category_id = db.Column(
+        db.Integer,
+        db.ForeignKey('finance_category.id')
+    )
+
+    description = db.Column(db.String(200))
+    amount = db.Column(db.Float)
+    date = db.Column(db.Date)
+    notes = db.Column(db.Text)
+
+    category = db.relationship("FinanceCategory")
+
+
+class FinanceCategory(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(100), nullable=False)
+
+    type = db.Column(db.String(20))  # income / expense
+
+    description = db.Column(db.String(200))
+
+    def __repr__(self):
+        return f"<FinanceCategory {self.name}>"

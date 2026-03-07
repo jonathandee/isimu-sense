@@ -71,24 +71,6 @@
         <div class="card shadow-sm">
             <div class="card-body">
 
-                <h5 class="card-title">Feed Management</h5>
-
-                <p class="card-text">
-                    Record livestock feeding and feed usage.
-                </p>
-
-                <a href="{{ url_for('main.feed') }}" class="btn btn-success">
-                    Open
-                </a>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-
                 <h5 class="card-title">Weight Records</h5>
 
                 <p class="card-text">
@@ -104,21 +86,25 @@
     </div>
 
     <div class="col-md-4">
+
         <div class="card shadow-sm">
+
             <div class="card-body">
 
                 <h5 class="card-title">Health Management</h5>
 
                 <p class="card-text">
-                    Record treatments, vaccinations and animal health.
+                    Record treatments, diseases and veterinary care.
                 </p>
 
-                <a href="{{ url_for('main.health') }}" class="btn btn-success">
+                <a href="{{ url_for('main.health_records') }}" class="btn btn-success">
                     Open
                 </a>
 
             </div>
+
         </div>
+
     </div>
 
     <div class="col-md-4">
@@ -137,6 +123,28 @@
 
             </div>
         </div>
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="card-title">Feed Management</h5>
+
+                <p class="card-text">
+                    Record feed given to animals.
+                </p>
+
+                <a href="{{ url_for('main.feed_management') }}" class="btn btn-success">
+                    Open
+                </a>
+
+            </div>
+
+        </div>
+
     </div>
 
     <div class="col-md-4">

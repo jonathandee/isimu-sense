@@ -3,18 +3,73 @@
 {% block title %}Finance{% endblock %}
 
 {% block content %}
+
 <h1 class="mb-4">Finance 💰</h1>
 
 <p class="text-muted">
-    This module will manage revenue, expenses,
-    profit & loss, and financial analysis.
+    Manage farm financial records including income and expenses.
 </p>
 
-<div class="alert alert-info mt-4">
-    Finance module structure coming in V2.
+<hr>
+
+<div class="row g-4">
+
+    <!-- Categories -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="card-title">Categories</h5>
+
+                <p class="card-text">
+                    Manage income and expense categories.
+                </p>
+
+                <a href="{{ url_for('main.finance_categories') }}" class="btn btn-success">
+                    Open
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Transactions -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="card-title">Transactions</h5>
+
+                <p class="card-text">
+                    Record farm income and expenses.
+                </p>
+
+                <a href="{{ url_for('main.finance_transactions') }}" class="btn btn-success">
+                    Open
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
-<a href="/dashboard" class="btn btn-secondary mt-4">
-    Back to Dashboard
-</a>
+<div class="mt-4">
+
+    <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
 {% endblock %}

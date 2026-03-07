@@ -15,11 +15,16 @@ from .models import Animal
 from .models import Production
 from .models import WeightRecord
 from .models import AnimalExit
-from .models import FeedRecord
 from .models import HealthRecord
 from .models import BreedingEvent
 from .models import Birth
+from .models import FeedType
+from .models import FeedRecord
+from .models import HealthRecord
+from .models import FinanceTransaction
+from .models import FinanceCategory
 from . import db
+
 
 main = Blueprint("main", __name__)
 
@@ -806,123 +811,7 @@ def exits():
         exits=exits,
         animals=animals
     )
-
-############# FEED RECORD #################
-
-@main.route("/livestock/feed", methods=["GET", "POST"])
-def feed():
-
-    animals = Animal.query.filter_by(status="active").all()
-    inventory_items = InventoryItem.query.all()
-
-    if request.method == "POST":
-
-        animal_id = request.form.get("animal")
-        inventory_item_id = request.form.get("feed")
-        quantity = float(request.form.get("quantity"))
-
-        date_str = request.form.get("date")
-        date = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else None
-
-        notes = request.form.get("notes")
-
-        item = InventoryItem.query.get(inventory_item_id)
-
-        if item.quantity < quantity:
-            flash(f"Not enough {item.name} in inventory", "danger")
-            return redirect(url_for("main.feed"))
-
-        feed_record = FeedRecord(
-            animal_id=animal_id,
-            inventory_item_id=inventory_item_id,
-            quantity=quantity,
-            unit=item.unit,
-            date=date,
-            notes=notes
-        )
-
-        # deduct inventory
-        item.quantity -= quantity
-
-        db.session.add(feed_record)
-        db.session.commit()
-
-        return redirect(url_for("main.feed"))
-
-    feeds = FeedRecord.query.all()
-
-    return render_template(
-        "feed.html",
-        feeds=feeds,
-        animals=animals,
-        inventory_items=inventory_items
-    )
-
-############ HEALTH RECORD ################
-
-@main.route("/livestock/health", methods=["GET", "POST"])
-def health():
-
-    animals = Animal.query.filter_by(status="active").all()
-    inventory_items = InventoryItem.query.all()
-
-    if request.method == "POST":
-
-        animal_id = request.form.get("animal")
-        inventory_item_id = request.form.get("medication")
-
-        issue = request.form.get("issue")
-
-        quantity = request.form.get("quantity")
-        quantity = float(quantity) if quantity else None
-
-        weight = request.form.get("weight")
-        weight = float(weight) if weight else None
-
-        date_str = request.form.get("date")
-        date = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else None
-
-        notes = request.form.get("notes")
-
-        unit = None
-
-        if inventory_item_id:
-            item = InventoryItem.query.get(inventory_item_id)
-
-            if quantity and item.quantity < quantity:
-                flash(f"Not enough {item.name} in inventory", "danger")
-                return redirect(url_for("main.health"))
-
-            if quantity:
-                item.quantity -= quantity
-
-            unit = item.unit
-
-        record = HealthRecord(
-            animal_id=animal_id,
-            inventory_item_id=inventory_item_id if inventory_item_id else None,
-            issue=issue,
-            medication=item.name if inventory_item_id else None,
-            quantity=quantity,
-            unit=unit,
-            weight=weight,
-            date=date,
-            notes=notes
-        )
-
-        db.session.add(record)
-        db.session.commit()
-
-        return redirect(url_for("main.health"))
-
-    health_records = HealthRecord.query.all()
-
-    return render_template(
-        "health.html",
-        health_records=health_records,
-        animals=animals,
-        inventory_items=inventory_items
-    )
+    
 
 ########### BREEDING ############
 
@@ -1029,7 +918,315 @@ def births():
         births=births,
         breeding_events=breeding_events
     )
+
+#####################################
+#           FEED RECORDS            #
+#####################################
+
+@main.route("/livestock/feed-management")
+def feed_management():
+
+    return render_template("feed_management.html")
+
+
+
+@main.route("/livestock/feed_records", methods=["GET", "POST"])
+def feed_records():
+
+    animals = Animal.query.filter_by(status="active").all()
+    feed_types = FeedType.query.all()
+
+    if request.method == "POST":
+
+        animal_id = request.form.get("animal")
+        feed_type_id = request.form.get("feed_type")
+
+        quantity = request.form.get("quantity")
+        unit = request.form.get("unit")
+
+        date_str = request.form.get("date")
+        date = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else None
+
+        notes = request.form.get("notes")
+
+        record = FeedRecord(
+            animal_id=animal_id,
+            feed_type_id=feed_type_id,
+            quantity=quantity,
+            unit=unit,
+            date=date,
+            notes=notes
+        )
+
+        db.session.add(record)
+        db.session.commit()
+
+        return redirect(url_for("main.feed_records"))
+
+    records = FeedRecord.query.order_by(FeedRecord.date.desc()).all()
+
+    return render_template(
+        "feed_records.html",
+        animals=animals,
+        feed_types=feed_types,
+        records=records
+    )
+
+########### EDIT FEED RECORDS
+
+@main.route("/livestock/feed-records/edit/<int:id>", methods=["POST"])
+def edit_feed_record(id):
+
+    record = FeedRecord.query.get_or_404(id)
+
+    record.animal_id = request.form.get("animal")
+    record.feed_type_id = request.form.get("feed_type")
+    record.quantity = request.form.get("quantity")
+    record.unit = request.form.get("unit")
+
+    date_str = request.form.get("date")
+    record.date = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else None
+
+    record.notes = request.form.get("notes")
+
+    db.session.commit()
+
+    return redirect(url_for("main.feed_records"))
+
+
+@main.route("/livestock/feed-types", methods=["GET", "POST"])
+def feed_types():
+
+    if request.method == "POST":
+
+        name = request.form.get("name")
+        default_unit = request.form.get("default_unit")
+        notes = request.form.get("notes")
+
+        feed = FeedType(
+            name=name,
+            default_unit=default_unit,
+            notes=notes
+        )
+
+        db.session.add(feed)
+        db.session.commit()
+
+        return redirect(url_for("main.feed_types"))
+
+    feed_types = FeedType.query.all()
+
+    return render_template(
+        "feed_types.html",
+        feed_types=feed_types
+    )
+
+########### EDIT FEED TYPE 
+
+@main.route("/livestock/feed-types/edit/<int:id>", methods=["POST"])
+def edit_feed_type(id):
+
+    feed = FeedType.query.get_or_404(id)
+
+    feed.name = request.form.get("name")
+    feed.default_unit = request.form.get("default_unit")
+    feed.notes = request.form.get("notes")
+
+    db.session.commit()
+
+    return redirect(url_for("main.feed_types"))
+
+############ DELETE FEED TYPE
+
+@main.route("/livestock/feed-types/delete/<int:id>")
+def delete_feed_type(id):
+
+    feed = FeedType.query.get_or_404(id)
+
+    db.session.delete(feed)
+    db.session.commit()
+
+    return redirect(url_for("main.feed_types"))
+
+
+############# HEALTH RECORDS ################
+
+@main.route("/livestock/health-records", methods=["GET", "POST"])
+def health_records():
+
+    animals = Animal.query.filter_by(status="active").all()
+
+    if request.method == "POST":
+
+        animal_id = request.form.get("animal")
+        condition = request.form.get("condition")
+        treatment = request.form.get("treatment")
+        medication = request.form.get("medication")
+
+        date_str = request.form.get("date")
+        date = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else None
+
+        notes = request.form.get("notes")
+
+        record = HealthRecord(
+            animal_id=animal_id,
+            condition=condition,
+            treatment=treatment,
+            medication=medication,
+            date=date,
+            notes=notes
+        )
+
+        db.session.add(record)
+        db.session.commit()
+
+        return redirect(url_for("main.health_records"))
+
+    records = HealthRecord.query.order_by(HealthRecord.date.desc()).all()
+
+    return render_template(
+        "health_records.html",
+        animals=animals,
+        records=records
+    )
+
+############# EDIT HEALTH RECORDS
+
+@main.route("/livestock/health-records/edit/<int:id>", methods=["POST"])
+def edit_health_record(id):
+
+    record = HealthRecord.query.get_or_404(id)
+
+    record.animal_id = request.form.get("animal")
+    record.condition = request.form.get("condition")
+    record.treatment = request.form.get("treatment")
+    record.medication = request.form.get("medication")
+
+    date_str = request.form.get("date")
+    record.date = datetime.strptime(date_str, "%Y-%m-%d").date() if date_str else None
+
+    record.notes = request.form.get("notes")
+
+    db.session.commit()
+
+    return redirect(url_for("main.health_records"))
+
+
+
+########################
+#       FINANCE        #
+########################
+
+@main.route("/finance")
+def finance():
+    return render_template("finance.html")
+
+
+########## TRANSACTIONS
+
+@main.route("/finance/transactions", methods=["GET", "POST"])
+def finance_transactions():
+
+    categories = FinanceCategory.query.all()
+
+    if request.method == "POST":
+
+        type = request.form.get("type")
+        category_id = request.form.get("category")
+        description = request.form.get("description")
+        amount = request.form.get("amount")
+        date = request.form.get("date")
+        notes = request.form.get("notes")
+
+        # Basic validation
+        if not type or not category_id or not amount or not date:
+            return redirect(url_for("main.finance_transactions"))
+
+        transaction = FinanceTransaction(
+            type=type,
+            category_id=category_id,
+            description=description,
+            amount=amount,
+            date=date,
+            notes=notes
+        )
+
+        db.session.add(transaction)
+        db.session.commit()
+
+        return redirect(url_for("main.finance_transactions"))
+
+    transactions = FinanceTransaction.query.order_by(
+        FinanceTransaction.date.desc()
+    ).all()
+
+    return render_template(
+        "finance_transactions.html",
+        transactions=transactions,
+        categories=categories
+    )
     
+########### FINANCE CATEGORIES
+
+@main.route("/finance/categories", methods=["GET", "POST"])
+def finance_categories():
+
+    if request.method == "POST":
+
+        name = request.form.get("name")
+        type = request.form.get("type")
+        description = request.form.get("description")
+
+        category = FinanceCategory(
+            name=name,
+            type=type,
+            description=description
+        )
+
+        db.session.add(category)
+        db.session.commit()
+
+        return redirect(url_for("main.finance_categories"))
+
+    categories = FinanceCategory.query.order_by(
+        FinanceCategory.type
+    ).all()
+
+    return render_template(
+        "finance_categories.html",
+        categories=categories
+    )
+    
+############# EDIT CATEGORY
+
+@main.route("/finance/categories/edit/<int:id>", methods=["POST"])
+def edit_finance_category(id):
+
+    category = FinanceCategory.query.get_or_404(id)
+
+    category.name = request.form.get("name")
+    category.type = request.form.get("type")
+    category.description = request.form.get("description")
+
+    db.session.commit()
+
+    return redirect(url_for("main.finance_categories"))
+
+
+############# DELETE CATEGORY
+
+@main.route("/finance/categories/delete/<int:id>")
+def delete_finance_category(id):
+
+    category = FinanceCategory.query.get_or_404(id)
+
+    db.session.delete(category)
+    db.session.commit()
+
+    return redirect(url_for("main.finance_categories"))
+
+
+
 #############################################
             #REPORTS MODULE#
 #############################################
@@ -1049,6 +1246,3 @@ def crop_reports():
         harvests=harvests
     )
     
-@main.route("/finance")
-def finance():
-    return render_template("finance.html")

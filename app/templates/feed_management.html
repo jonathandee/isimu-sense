@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Feed Management{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Feed Management 🌾</h1>
+
+<p class="text-muted">
+    Manage livestock feed types and feeding records.
+</p>
+
+<hr>
+
+<div class="row g-4">
+
+    <!-- Feed Types -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="card-title">Feed Types</h5>
+
+                <p class="card-text">
+                    Manage types of feed used on the farm.
+                </p>
+
+                <a href="{{ url_for('main.feed_types') }}" class="btn btn-success">
+                    Open
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Feeding Records -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="card-title">Feeding Records</h5>
+
+                <p class="card-text">
+                    Record feed given to animals.
+                </p>
+
+                <a href="{{ url_for('main.feed_records') }}" class="btn btn-success">
+                    Open
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<a href="{{ url_for('main.livestock') }}" class="btn btn-secondary mt-4">
+    ← Back to Livestock
+</a>
+
+{% endblock %}
