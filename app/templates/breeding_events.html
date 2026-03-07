@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Breeding Events{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Breeding Events</h1>
+
+<h4>Record Breeding Event</h4>
+
+<form method="POST">
+
+    <div class="row">
+
+        <!-- Breeding Type -->
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Breeding Type</label>
+
+            <select name="breeding_type" id="breeding_type" class="form-control">
+
+                <option value="Natural">Natural</option>
+                <option value="AI">Artificial Insemination</option>
+
+            </select>
+        </div>
+
+
+        <!-- Male Animal -->
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Male</label>
+
+            <select name="male" id="male_field" class="form-control">
+
+                <option value="">Select Male</option>
+
+                {% for animal in males %}
+
+                <option value="{{ animal.id }}" data-breed="{{ animal.animal_type.breed }}">
+
+                    {{ animal.tag_number }} ({{ animal.animal_type.breed }})
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+        </div>
+
+
+        <!-- Female Animal -->
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Female</label>
+
+            <select name="female" id="female_field" class="form-control">
+
+                <option value="">Select Female</option>
+
+                {% for animal in females %}
+
+                <option value="{{ animal.id }}" data-breed="{{ animal.animal_type.breed }}">
+
+                    {{ animal.tag_number }} ({{ animal.animal_type.breed }})
+
+                </option>
+
+                {% endfor %}
+
+            </select>
+        </div>
+
+
+        <!-- Male Breed -->
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Male Breed</label>
+            <input type="text" name="male_breed" id="male_breed" class="form-control">
+        </div>
+
+
+        <!-- Female Breed -->
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Female Breed</label>
+            <input type="text" name="female_breed" id="female_breed" class="form-control">
+        </div>
+
+
+        <!-- Breeding Date -->
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Breeding Date</label>
+            <input type="date" name="breeding_date" class="form-control">
+        </div>
+
+
+        <!-- Expected Birth -->
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Expected Birth</label>
+            <input type="date" name="expected_birth" class="form-control">
+        </div>
+
+
+        <!-- Notes -->
+
+        <div class="col-md-12 mb-3">
+            <label class="form-label">Notes</label>
+            <textarea name="notes" class="form-control"></textarea>
+        </div>
+
+    </div>
+
+    <button class="btn btn-success">
+        Record Breeding
+    </button>
+
+</form>
+
+<hr>
+
+<table class="table table-striped">
+
+    <thead class="table-success">
+
+        <tr>
+            <th>Male</th>
+            <th>Female</th>
+            <th>Type</th>
+            <th>Breeding Date</th>
+            <th>Expected Birth</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for e in events %}
+
+        <tr>
+
+            <td>{{ e.male.tag_number if e.male else "AI" }}</td>
+            <td>{{ e.female.tag_number }}</td>
+
+            <td>{{ e.breeding_type }}</td>
+
+            <td>{{ e.breeding_date }}</td>
+            <td>{{ e.expected_birth }}</td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+<a href="{{ url_for('main.breeding') }}" class="btn btn-secondary mt-4">
+    Back to Livestock
+</a>
+
+
+<script>
+
+    // Disable male if AI selected
+    document.getElementById("breeding_type").addEventListener("change", function () {
+
+        let maleField = document.getElementById("male_field");
+
+        if (this.value === "AI") {
+
+            maleField.disabled = true;
+            maleField.value = "";
+
+        } else {
+
+            maleField.disabled = false;
+
+        }
+
+    });
+
+
+    // Auto-fill male breed
+    document.getElementById("male_field").addEventListener("change", function () {
+
+        let breed = this.options[this.selectedIndex].dataset.breed;
+        document.getElementById("male_breed").value = breed || "";
+
+    });
+
+
+    // Auto-fill female breed
+    document.getElementById("female_field").addEventListener("change", function () {
+
+        let breed = this.options[this.selectedIndex].dataset.breed;
+        document.getElementById("female_breed").value = breed || "";
+
+    });
+
+</script>
+
+{% endblock %}

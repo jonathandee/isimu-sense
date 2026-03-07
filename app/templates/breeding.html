@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Breeding{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Breeding 🐄</h1>
+
+<p class="text-muted">
+    Manage livestock reproduction records.
+</p>
+
+<div class="row g-4">
+
+    <!-- Breeding Events -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="card-title">Breeding Events</h5>
+
+                <p class="card-text">
+                    Record mating between animals (Natural or AI).
+                </p>
+
+                <a href="{{ url_for('main.breeding_events') }}" class="btn btn-success">
+                    Open
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Birth Records -->
+
+    <div class="col-md-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5 class="card-title">Birth Records</h5>
+
+                <p class="card-text">
+                    Record births and add offspring to livestock stock.
+                </p>
+
+                <a href="{{ url_for('main.births') }}" class="btn btn-success">
+                    Open
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<a href="{{ url_for('main.livestock') }}" class="btn btn-secondary mt-4">
+    Back to Livestock
+</a>
+
+{% endblock %}

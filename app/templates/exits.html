@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Animal Exits{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Animal Exits</h1>
+
+<h4>Record Exit</h4>
+
+<form method="POST">
+
+    <div class="mb-3">
+        <label class="form-label">Animal</label>
+
+        <select name="animal" class="form-control">
+
+            <option value="">Select Animal</option>
+
+            {% for animal in animals %}
+
+            <option value="{{ animal.id }}">
+                {{ animal.tag_number }} - {{ animal.animal_type.name }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Exit Type</label>
+
+        <select name="exit_type" class="form-control">
+
+            <option value="sale">Sale</option>
+            <option value="slaughter">Slaughter</option>
+            <option value="death">Death</option>
+
+        </select>
+
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Quantity</label>
+        <input type="number" name="quantity" class="form-control" value="1">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Date</label>
+        <input type="date" name="date" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Notes</label>
+        <textarea name="notes" class="form-control"></textarea>
+    </div>
+
+    <button class="btn btn-danger">
+        Record Exit
+    </button>
+
+</form>
+
+<hr>
+
+<table class="table table-striped">
+
+    <thead class="table-danger">
+        <tr>
+            <th>Animal</th>
+            <th>Exit Type</th>
+            <th>Quantity</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for e in exits %}
+
+        <tr>
+
+            <td>{{ e.animal.tag_number }}</td>
+
+            <td>{{ e.exit_type }}</td>
+
+            <td>{{ e.quantity }}</td>
+
+            <td>{{ e.date }}</td>
+
+        </tr>
+
+        {% else %}
+
+        <tr>
+            <td colspan="4" class="text-center text-muted">
+                No exit records yet
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+<a href="{{ url_for('main.livestock') }}" class="btn btn-secondary mt-4">
+    Back to Livestock
+</a>
+
+{% endblock %}

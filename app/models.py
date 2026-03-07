@@ -133,3 +133,247 @@ class Harvest(db.Model):
     def __repr__(self):
         return f"<Harvest {self.quantity} {self.unit}>"
 
+
+##############################
+######## LIVESTOCK ###########
+##############################
+
+class AnimalType(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    breed = db.Column(db.String(100))
+
+    def __repr__(self):
+        return f"<AnimalType {self.name}>"
+
+
+class Animal(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    tag_number = db.Column(db.String(50))
+
+    animal_type_id = db.Column(
+        db.Integer,
+        db.ForeignKey('animal_type.id'),
+        nullable=False
+    )
+
+    purpose = db.Column(db.String(20))   # production, breeding, meat, sale
+
+    quantity = db.Column(db.Integer, default=1)  # supports batch animals
+
+    sex = db.Column(db.String(10))
+    date_of_birth = db.Column(db.Date)
+
+    status = db.Column(db.String(20), default="active")
+
+    notes = db.Column(db.Text)
+
+    animal_type = db.relationship('AnimalType')
+
+    def __repr__(self):
+        return f"<Animal {self.tag_number}>"
+
+class Production(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    animal_id = db.Column(
+        db.Integer,
+        db.ForeignKey('animal.id'),
+        nullable=False
+    )
+
+    product = db.Column(db.String(50))  # Milk, Eggs, Honey
+    quantity = db.Column(db.Float)
+    unit = db.Column(db.String(20))     # Litres, Eggs, Kg
+
+    date = db.Column(db.Date)
+
+    notes = db.Column(db.Text)
+
+    animal = db.relationship('Animal')
+
+    def __repr__(self):
+        return f"<Production {self.product}>"
+
+
+class WeightRecord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    animal_id = db.Column(
+        db.Integer,
+        db.ForeignKey('animal.id'),
+        nullable=False
+    )
+
+    weight = db.Column(db.Float)  # weight value
+    unit = db.Column(db.String(20))  # kg, g etc
+
+    date = db.Column(db.Date)
+
+    notes = db.Column(db.Text)
+
+    animal = db.relationship('Animal')
+
+    def __repr__(self):
+        return f"<WeightRecord {self.weight}>"
+
+
+##################################
+############ EXITS ###############
+##################################
+
+class AnimalExit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    animal_id = db.Column(
+        db.Integer,
+        db.ForeignKey('animal.id'),
+        nullable=False
+    )
+
+    exit_type = db.Column(db.String(20))  # sale, slaughter, death
+
+    quantity = db.Column(db.Integer, default=1)
+
+    date = db.Column(db.Date)
+
+    notes = db.Column(db.Text)
+
+    animal = db.relationship('Animal')
+
+    def __repr__(self):
+        return f"<AnimalExit {self.exit_type}>"
+    
+
+####################################
+######### FEED MANAGEMENT ##########
+####################################
+
+class FeedRecord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    animal_id = db.Column(
+        db.Integer,
+        db.ForeignKey('animal.id'),
+        nullable=False
+    )
+
+    inventory_item_id = db.Column(
+        db.Integer,
+        db.ForeignKey('inventory_item.id')
+    )
+
+    quantity = db.Column(db.Float)
+
+    unit = db.Column(db.String(20))
+
+    date = db.Column(db.Date)
+
+    notes = db.Column(db.Text)
+
+    animal = db.relationship('Animal')
+    inventory_item = db.relationship('InventoryItem')
+
+    def __repr__(self):
+        return f"<FeedRecord {self.quantity}>"
+
+
+########### HEALT RECORD ##########
+
+class HealthRecord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    animal_id = db.Column(
+        db.Integer,
+        db.ForeignKey('animal.id'),
+        nullable=False
+    )
+
+    inventory_item_id = db.Column(
+        db.Integer,
+        db.ForeignKey('inventory_item.id')
+    )
+
+    issue = db.Column(db.String(200))  # illness or treatment
+    medication = db.Column(db.String(200))
+
+    quantity = db.Column(db.Float)
+    unit = db.Column(db.String(20))
+
+    weight = db.Column(db.Float)  # optional weight during treatment
+
+    date = db.Column(db.Date)
+
+    notes = db.Column(db.Text)
+
+    animal = db.relationship('Animal')
+    inventory_item = db.relationship('InventoryItem')
+
+    def __repr__(self):
+        return f"<HealthRecord {self.issue}>"
+
+############ BREEDING RECORD ##############
+
+class BreedingEvent(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    male_id = db.Column(
+        db.Integer,
+        db.ForeignKey('animal.id'),
+        nullable=True
+    )
+
+    female_id = db.Column(
+        db.Integer,
+        db.ForeignKey('animal.id'),
+        nullable=False
+    )
+
+    male_breed = db.Column(db.String(100))
+    female_breed = db.Column(db.String(100))
+
+    breeding_type = db.Column(db.String(20))  # Natural / AI
+
+    breeding_date = db.Column(db.Date)
+    expected_birth = db.Column(db.Date)
+
+    status = db.Column(db.String(20), default="pregnant")
+
+    notes = db.Column(db.Text)
+
+    male = db.relationship("Animal", foreign_keys=[male_id])
+    female = db.relationship("Animal", foreign_keys=[female_id])
+
+    def __repr__(self):
+        return f"<BreedingEvent {self.id}>"
+
+
+########### BIRTH RECORDS ################
+
+class Birth(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    breeding_event_id = db.Column(
+        db.Integer,
+        db.ForeignKey('breeding_event.id'),
+        nullable=False
+    )
+
+    birth_date = db.Column(db.Date)
+
+    offspring_breed = db.Column(db.String(100))
+
+    male_offspring = db.Column(db.Integer, default=0)
+    female_offspring = db.Column(db.Integer, default=0)
+
+    notes = db.Column(db.Text)
+
+    breeding_event = db.relationship("BreedingEvent")
+
+    def __repr__(self):
+        return f"<Birth {self.id}>"
+
+
+
+

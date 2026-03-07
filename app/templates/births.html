@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Birth Records{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Birth Records</h1>
+
+<h4>Record Birth</h4>
+
+<form method="POST">
+
+    <div class="row">
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Breeding Event</label>
+
+            <select name="breeding_event" class="form-control">
+
+                <option value="">Select Breeding Event</option>
+
+                {% for event in breeding_events %}
+
+                <option value="{{ event.id }}">
+                    {{ event.female.tag_number }} ×
+                    {{ event.male.tag_number if event.male else "AI" }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+        </div>
+
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Birth Date</label>
+            <input type="date" name="birth_date" class="form-control">
+        </div>
+
+
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Offspring Breed</label>
+            <input type="text" name="offspring_breed" class="form-control">
+        </div>
+
+
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Male Offspring</label>
+            <input type="number" name="male_offspring" class="form-control" value="0">
+        </div>
+
+
+        <div class="col-md-3 mb-3">
+            <label class="form-label">Female Offspring</label>
+            <input type="number" name="female_offspring" class="form-control" value="0">
+        </div>
+
+
+        <div class="col-md-12 mb-3">
+            <label class="form-label">Notes</label>
+            <textarea name="notes" class="form-control"></textarea>
+        </div>
+
+    </div>
+
+    <button class="btn btn-success">
+        Record Birth
+    </button>
+
+</form>
+
+<hr>
+
+<table class="table table-striped">
+
+    <thead class="table-success">
+        <tr>
+
+            <th>Breeding</th>
+            <th>Birth Date</th>
+            <th>Breed</th>
+            <th>Male</th>
+            <th>Female</th>
+
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for b in births %}
+
+        <tr>
+
+            <td>
+                {{ b.breeding_event.female.tag_number }} ×
+                {{ b.breeding_event.male.tag_number if b.breeding_event.male else "AI" }}
+            </td>
+
+            <td>{{ b.birth_date }}</td>
+            <td>{{ b.offspring_breed }}</td>
+
+            <td>{{ b.male_offspring }}</td>
+            <td>{{ b.female_offspring }}</td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+<a href="{{ url_for('main.breeding') }}" class="btn btn-secondary mt-4">
+    Back to Breeding
+</a>
+
+{% endblock %}
