@@ -3,22 +3,23 @@ from datetime import datetime
 from . import main
 from .. import db
 from ..models import CropType, Field, Planting, InventoryItem, Application, Harvest
-
+from flask_login import login_required
 
 ################################################
 # CROPS DASHBOARD
 ################################################
 
 @main.route("/crops")
+@login_required
 def crops():
     return render_template("crops.html")
-
 
 ################################################
 # CROP TYPES (CONFIGURATION)
 ################################################
 
 @main.route("/crops/types", methods=["GET", "POST"])
+@login_required
 def crop_types():
 
     if request.method == "POST":
@@ -44,9 +45,9 @@ def crop_types():
         crops=crops
     )
 
-
 # EDIT CROP TYPE
 @main.route("/crops/types/edit/<int:id>", methods=["POST"])
+@login_required
 def edit_crop_type(id):
 
     crop = CropType.query.get_or_404(id)
@@ -59,9 +60,9 @@ def edit_crop_type(id):
 
     return redirect(url_for("main.crop_types"))
 
-
-# DELETE CROP TYPE (Allowed: configuration entity)
+# DELETE CROP TYPE
 @main.route("/crops/types/delete/<int:id>")
+@login_required
 def delete_crop_type(id):
 
     crop = CropType.query.get_or_404(id)
@@ -71,12 +72,12 @@ def delete_crop_type(id):
 
     return redirect(url_for("main.crop_types"))
 
-
 ################################################
 # FIELDS (CONFIGURATION)
 ################################################
 
 @main.route("/crops/fields", methods=["GET", "POST"])
+@login_required
 def fields():
 
     if request.method == "POST":
@@ -103,9 +104,9 @@ def fields():
         fields=fields
     )
 
-
 # EDIT FIELD
 @main.route("/crops/fields/edit/<int:id>", methods=["POST"])
+@login_required
 def edit_field(id):
 
     field = Field.query.get_or_404(id)
@@ -118,9 +119,9 @@ def edit_field(id):
 
     return redirect(url_for("main.fields"))
 
-
-# DELETE FIELD (Allowed: configuration entity)
+# DELETE FIELD
 @main.route("/crops/fields/delete/<int:id>")
+@login_required
 def delete_field(id):
 
     field = Field.query.get_or_404(id)
@@ -130,12 +131,12 @@ def delete_field(id):
 
     return redirect(url_for("main.fields"))
 
-
 ################################################
-# PLANTINGS (OPERATIONAL RECORD)
+# PLANTINGS
 ################################################
 
 @main.route("/crops/plantings", methods=["GET", "POST"])
+@login_required
 def plantings():
 
     crops = CropType.query.all()
@@ -156,7 +157,6 @@ def plantings():
             "%Y-%m-%d"
         )
 
-        # Prevent multiple active plantings on same field
         existing = Planting.query.filter_by(
             field_id=field_id,
             status="active"
@@ -187,9 +187,9 @@ def plantings():
         fields=fields
     )
 
-
 # COMPLETE PLANTING
 @main.route("/crops/plantings/complete/<int:id>")
+@login_required
 def complete_planting(id):
 
     planting = Planting.query.get_or_404(id)
@@ -202,12 +202,12 @@ def complete_planting(id):
 
     return redirect(url_for("main.plantings"))
 
-
 ################################################
 # INPUT APPLICATIONS
 ################################################
 
 @main.route("/crops/applications", methods=["GET", "POST"])
+@login_required
 def applications():
 
     plantings = Planting.query.all()
@@ -227,12 +227,10 @@ def applications():
 
         planting = Planting.query.get(planting_id)
 
-        # Prevent application before planting date
         if date and date < planting.planting_date:
             flash("Application date cannot be before the planting date.", "danger")
             return redirect(url_for("main.applications"))
 
-        # Handle inventory deduction
         if inventory_item_id:
 
             item = InventoryItem.query.get(inventory_item_id)
@@ -266,9 +264,9 @@ def applications():
         inventory_items=inventory_items
     )
 
-
 # EDIT APPLICATION
 @main.route("/crops/applications/edit/<int:id>", methods=["POST"])
+@login_required
 def edit_application(id):
 
     application = Application.query.get_or_404(id)
@@ -303,12 +301,12 @@ def edit_application(id):
 
     return redirect(url_for("main.applications"))
 
-
 ################################################
-# HARVEST RECORDS
+# HARVEST
 ################################################
 
 @main.route("/crops/harvest", methods=["GET", "POST"])
+@login_required
 def harvest():
 
     plantings = Planting.query.all()
@@ -351,9 +349,9 @@ def harvest():
         plantings=plantings
     )
 
-
 # EDIT HARVEST
 @main.route("/crops/harvest/edit/<int:id>", methods=["POST"])
+@login_required
 def edit_harvest(id):
 
     harvest = Harvest.query.get_or_404(id)
