@@ -5,103 +5,162 @@
 {% block content %}
 
 <h1 class="mb-4">Crop Reports 🌾</h1>
-
-<p class="text-muted">Harvest production records.</p>
+<p class="text-muted">Harvest production records and crop performance.</p>
 
 <hr>
 
+<!-- Summary Cards -->
+<div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted">Total Harvest Records</h6>
+                <h3 class="text-success fw-bold">{{ harvests|length }}</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 <div class="row">
 
+    <!-- Harvest Table -->
     <div class="col-md-6">
 
-        <h4>Harvest Records</h4>
+        <div class="card shadow-sm border-0">
 
-        <table class="table table-striped">
+            <div class="card-header bg-success text-white">
+                Harvest Records
+            </div>
 
-            <thead class="table-success">
-                <tr>
-                    <th>Crop</th>
-                    <th>Field</th>
-                    <th>Quantity</th>
-                    <th>Unit</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
+            <div class="card-body">
 
-            <tbody>
+                <div class="table-responsive">
 
-                {% for harvest in harvests %}
+                    <table class="table table-hover align-middle">
 
-                <tr>
-                    <td>{{ harvest.planting.crop_type.name }}</td>
-                    <td>{{ harvest.planting.field.name }}</td>
-                    <td>{{ harvest.quantity }}</td>
-                    <td>{{ harvest.unit }}</td>
-                    <td>{{ harvest.date }}</td>
-                </tr>
+                        <thead class="table-light">
+                            <tr>
+                                <th>Crop</th>
+                                <th>Field</th>
+                                <th>Quantity</th>
+                                <th>Unit</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
 
-                {% endfor %}
+                        <tbody>
 
-            </tbody>
+                            {% for harvest in harvests %}
 
-        </table>
+                            <tr>
+                                <td>{{ harvest.planting.crop_type.name }}</td>
+                                <td>{{ harvest.planting.field.name }}</td>
+                                <td>{{ harvest.quantity }}</td>
+                                <td>{{ harvest.unit }}</td>
+                                <td>{{ harvest.date }}</td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
 
     </div>
 
+
+    <!-- Production Chart -->
     <div class="col-md-6">
 
-        <h4>Production Chart</h4>
+        <div class="card shadow-sm border-0">
 
+            <div class="card-header bg-success text-white">
+                Production by Crop
+            </div>
 
-        <canvas id="cropChart"></canvas>
+            <div class="card-body">
+                <canvas id="cropChart"></canvas>
+            </div>
 
-        <script>
-
-document.addEventListener("DOMContentLoaded", function () {
-
-const labels = [];
-const values = [];
-
-{% for harvest in harvests %}
-
-labels.push("{{ harvest.planting.crop_type.name }} ({{ harvest.unit }})");
-values.push({{ harvest.quantity }});
-
-{% endfor %}
-
-const ctx = document.getElementById("cropChart");
-
-if (ctx) {
-    new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Harvest Quantity",
-                data: values,
-                backgroundColor: "rgba(40, 167, 69, 0.7)",
-                borderColor: "rgba(40, 167, 69, 1)",
-                barThickness: 50
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-}
-
-});
-
-</script>
+        </div>
 
     </div>
 
 </div>
+
+
+<!-- Yield Per Field Analysis -->
+<div class="row mt-4">
+
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-success text-white">
+                Yield Per Field
+            </div>
+
+            <div class="card-body">
+
+                <table class="table table-hover">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Field</th>
+                            <th>Total Yield</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for field, total in field_yields.items() %}
+
+                        <tr>
+                            <td>{{ field }}</td>
+                            <td>{{ total }}</td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Yield Chart -->
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-success text-white">
+                Field Yield Chart
+            </div>
+
+            <div class="card-body">
+
+                <canvas id="fieldChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <div class="mt-4">
 
@@ -110,5 +169,74 @@ if (ctx) {
     </a>
 
 </div>
+
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        let cropLabels = [];
+        let cropValues = [];
+
+        {% for harvest in harvests %}
+
+        cropLabels.push("{{ harvest.planting.crop_type.name }}");
+        cropValues.push({{ harvest.quantity }});
+
+    {% endfor %}
+
+    new Chart(document.getElementById("cropChart"), {
+        type: "bar",
+        data: {
+            labels: cropLabels,
+            datasets: [{
+                label: "Harvest Quantity",
+                data: cropValues,
+                backgroundColor: "rgba(40,167,69,0.7)"
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+
+
+    let fieldLabels = [];
+    let fieldValues = [];
+
+    {% for field, total in field_yields.items() %}
+
+    fieldLabels.push("{{ field }}");
+    fieldValues.push({{ total }});
+
+    {% endfor %}
+
+    new Chart(document.getElementById("fieldChart"), {
+        type: "pie",
+        data: {
+            labels: fieldLabels,
+            datasets: [{
+                data: fieldValues,
+                backgroundColor: [
+                    "#28a745",
+                    "#20c997",
+                    "#17a2b8",
+                    "#ffc107",
+                    "#fd7e14"
+                ]
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+});
+
+</script>
 
 {% endblock %}

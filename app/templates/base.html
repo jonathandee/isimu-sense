@@ -7,6 +7,35 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <style>
+    /* 🌾 Farm background */
+    body {
+      background-image: url("{{ url_for('static', filename='images/farm_bg.jpg') }}");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+
+    /* Dark overlay for readability */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      z-index: -1;
+    }
+
+    /* Main content glass card */
+    .main-container {
+      background: rgba(255, 255, 255, 0.92);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+
 </head>
 
 <body>
@@ -23,8 +52,9 @@
 
   <div class="container mt-4">
 
-    <div class="container mt-3">
+    <div class="main-container">
 
+      <!-- Flash messages -->
       {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
       {% for category, message in messages %}
@@ -41,13 +71,13 @@
       {% endif %}
       {% endwith %}
 
+      {% block content %}{% endblock %}
+
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    {% block content %}{% endblock %}
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

@@ -1,24 +1,71 @@
 {% extends "base.html" %}
 
-{% block title %}Reports{% endblock %}
+{% block title %}Farm Reports{% endblock %}
 
 {% block content %}
 
-<h1 class="mb-4">Reports 📊</h1>
-
-<p class="text-muted">Farm analytics and performance insights.</p>
+<h1 class="mb-4">Farm Analytics 📊</h1>
+<p class="text-muted">
+    Overview of farm production, livestock performance, inventory and finances.
+</p>
 
 <hr>
+
+<!-- Summary KPIs -->
+
+<div class="row mb-4">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted">Total Harvest</h6>
+                <h3 class="text-success fw-bold">{{ total_harvest }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted">Livestock Production</h6>
+                <h3 class="fw-bold">{{ total_livestock_production }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted">Inventory Items</h6>
+                <h3 class="fw-bold">{{ inventory_count }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted">Farm Profit</h6>
+                <h3 class="fw-bold text-success">{{ profit }}</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Report Navigation -->
 
 <div class="row">
 
     <!-- Crop Reports -->
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
 
-                <h5 class="card-title">Crop Reports</h5>
-                <p class="card-text">Yield and production reports.</p>
+                <h5>Crop Reports 🌾</h5>
+                <p class="text-muted small">
+                    Harvest and yield analytics
+                </p>
 
                 <a href="{{ url_for('main.crop_reports') }}" class="btn btn-success">
                     Open
@@ -28,17 +75,58 @@
         </div>
     </div>
 
+
+    <!-- Livestock Reports -->
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+
+                <h5>Livestock Reports 🐄</h5>
+                <p class="text-muted small">
+                    Production, breeding and health
+                </p>
+
+                <a href="{{ url_for('main.livestock_reports') }}" class="btn btn-success">
+                    Open
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+
     <!-- Inventory Reports -->
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
 
-                <h5 class="card-title">Inventory Reports</h5>
-                <p class="card-text">Inventory usage and stock reports.</p>
+                <h5>Inventory Reports 📦</h5>
+                <p class="text-muted small">
+                    Stock levels and usage
+                </p>
 
-                <button class="btn btn-secondary" disabled>
-                    Coming Soon
-                </button>
+                <a href="{{ url_for('main.inventory_reports') }}" class="btn btn-success">
+                    Open
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Finance Reports -->
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+
+                <h5>Finance Reports 💰</h5>
+                <p class="text-muted small">
+                    Income, expenses and profit
+                </p>
+
+                <a href="{{ url_for('main.finance_reports') }}" class="btn btn-success">
+                    Open
+                </a>
 
             </div>
         </div>
