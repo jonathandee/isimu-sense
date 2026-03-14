@@ -11,7 +11,7 @@ from ..models import FinanceTransaction, FinanceCategory
 @main.route("/finance")
 def finance():
 
-    return render_template("finance.html")
+    return render_template("finance/finance.html")
 
 
 ################################################
@@ -55,7 +55,7 @@ def finance_transactions():
     ).all()
 
     return render_template(
-        "finance_transactions.html",
+        "finance/finance_transactions.html",
         transactions=transactions,
         categories=categories
     )
@@ -90,7 +90,7 @@ def finance_categories():
     ).all()
 
     return render_template(
-        "finance_categories.html",
+        "finance/finance_categories.html",
         categories=categories
     )
 

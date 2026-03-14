@@ -37,7 +37,7 @@ def reports():
     profit = income - expenses
 
     return render_template(
-        "reports.html",
+        "reports/reports.html",
         total_harvest=total_harvest,
         total_livestock_production=total_livestock_production,
         inventory_count=inventory_count,
@@ -68,7 +68,7 @@ def crop_reports():
 
 
     return render_template(
-        "crop_reports.html",
+        "reports/crop_reports.html",
         harvests=harvests,
         field_yields=field_yields
     )
@@ -99,7 +99,7 @@ def livestock_reports():
     total_feed = sum(float(f.quantity) for f in feed_records)
 
     return render_template(
-        "livestock_reports.html",
+        "reports/livestock_reports.html",
         productions=productions,
         weights=weights,
         health_records=health_records,
@@ -144,7 +144,7 @@ def inventory_reports():
         category_totals[category] += float(item.quantity)
 
     return render_template(
-        "inventory_reports.html",
+        "reports/inventory_reports.html",
         items=items,
         categories=categories,
         total_items=total_items,
@@ -175,7 +175,7 @@ def finance_reports():
     profit = income - expenses
 
     return render_template(
-        "finance_reports.html",
+        "reports/finance_reports.html",
         transactions=transactions,
         income=income,
         expenses=expenses,

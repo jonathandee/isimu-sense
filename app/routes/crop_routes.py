@@ -12,7 +12,7 @@ from flask_login import login_required
 @main.route("/crops")
 @login_required
 def crops():
-    return render_template("crops.html")
+    return render_template("crops/crops.html")
 
 ################################################
 # CROP TYPES (CONFIGURATION)
@@ -41,7 +41,7 @@ def crop_types():
     crops = CropType.query.all()
 
     return render_template(
-        "crop_types.html",
+        "crops/crop_types.html",
         crops=crops
     )
 
@@ -100,7 +100,7 @@ def fields():
     fields = Field.query.all()
 
     return render_template(
-        "fields.html",
+        "crops/fields.html",
         fields=fields
     )
 
@@ -181,7 +181,7 @@ def plantings():
     plantings = Planting.query.all()
 
     return render_template(
-        "plantings.html",
+        "crops/plantings.html",
         plantings=plantings,
         crops=crops,
         fields=fields
@@ -258,7 +258,7 @@ def applications():
     applications = Application.query.all()
 
     return render_template(
-        "applications.html",
+        "crops/applications.html",
         applications=applications,
         plantings=plantings,
         inventory_items=inventory_items
@@ -344,7 +344,7 @@ def harvest():
     harvests = Harvest.query.all()
 
     return render_template(
-        "harvest.html",
+        "crops/harvest.html",
         harvests=harvests,
         plantings=plantings
     )

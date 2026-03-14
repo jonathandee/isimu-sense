@@ -10,7 +10,7 @@ from ..models import InventoryCategory, InventoryItem
 
 @main.route("/inventory")
 def inventory():
-    return render_template("inventory.html")
+    return render_template("inventory/inventory.html")
 
 
 ################################################
@@ -34,7 +34,7 @@ def inventory_categories():
     categories = InventoryCategory.query.all()
 
     return render_template(
-        "inventory_categories.html",
+        "inventory/inventory_categories.html",
         categories=categories
     )
 
@@ -95,7 +95,7 @@ def inventory_items():
     items = InventoryItem.query.all()
 
     return render_template(
-        "inventory_items.html",
+        "inventory/inventory_items.html",
         items=items,
         categories=categories
     )

@@ -18,7 +18,7 @@ def livestock():
     animal_types = AnimalType.query.all()
 
     return render_template(
-        "livestock.html",
+        "livestock/livestock.html",
         animal_types=animal_types
     )
 
@@ -48,7 +48,7 @@ def animal_types():
     animal_types = AnimalType.query.all()
 
     return render_template(
-        "animal_types.html",
+        "livestock/animal_types.html",
         animal_types=animal_types
     )
 
@@ -117,7 +117,7 @@ def animals():
     animals = Animal.query.all()
 
     return render_template(
-        "animals.html",
+        "livestock/animals.html",
         animals=animals,
         animal_types=animal_types
     )
@@ -184,7 +184,7 @@ def production():
     productions = Production.query.all()
 
     return render_template(
-        "production.html",
+        "livestock/production.html",
         productions=productions,
         animals=animals
     )
@@ -226,7 +226,7 @@ def weight_records():
     weights = WeightRecord.query.all()
 
     return render_template(
-        "weights.html",
+        "livestock/weights.html",
         weights=weights,
         animals=animals
     )
@@ -279,7 +279,7 @@ def exits():
     exits = AnimalExit.query.all()
 
     return render_template(
-        "exits.html",
+        "livestock/exits.html",
         exits=exits,
         animals=animals
     )
@@ -290,7 +290,7 @@ def exits():
 
 @main.route("/livestock/breeding")
 def breeding():
-    return render_template("breeding.html")
+    return render_template("livestock/breeding.html")
 
 
 @main.route("/livestock/breeding/events", methods=["GET", "POST"])
@@ -340,7 +340,7 @@ def breeding_events():
     events = BreedingEvent.query.all()
 
     return render_template(
-        "breeding_events.html",
+        "livestock/breeding_events.html",
         events=events,
         males=males,
         females=females
@@ -405,7 +405,7 @@ def births():
     births = Birth.query.all()
 
     return render_template(
-        "births.html",
+        "livestock/births.html",
         births=births,
         breeding_events=breeding_events
     )
@@ -416,7 +416,7 @@ def births():
 
 @main.route("/livestock/feed-management")
 def feed_management():
-    return render_template("feed_management.html")
+    return render_template("livestock/feed_management.html")
 
 
 @main.route("/livestock/feed-records", methods=["GET", "POST"])
@@ -457,7 +457,7 @@ def feed_records():
     ).all()
 
     return render_template(
-        "feed_records.html",
+        "livestock/feed_records.html",
         animals=animals,
         feed_types=feed_types,
         records=records
@@ -513,7 +513,7 @@ def feed_types():
     feed_types = FeedType.query.all()
 
     return render_template(
-        "feed_types.html",
+        "livestock/feed_types.html",
         feed_types=feed_types
     )
 
@@ -583,7 +583,7 @@ def health_records():
     ).all()
 
     return render_template(
-        "health_records.html",
+        "livestock/health_records.html",
         animals=animals,
         records=records
     )
