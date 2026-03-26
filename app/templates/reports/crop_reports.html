@@ -199,7 +199,7 @@
 
         {% for harvest in harvests %}
         let crop = "{{ harvest.planting.crop_type.name }}";
-        let qty = {{ harvest.quantity }
+        let qty = { harvest.quantity }
     };
 
     if (!cropMap[crop]) {

@@ -5,7 +5,6 @@ from . import main
 from ..models import User
 from .. import db
 
-
 #####################
 # USER MANAGEMENT
 #####################
@@ -57,7 +56,6 @@ def manage_users():
     users = User.query.all()
     return render_template("manage_users.html", users=users)
 
-
 #####################
 # EDIT USER
 #####################
@@ -78,13 +76,13 @@ def edit_user(id):
         flash("Username cannot be empty", "danger")
         return redirect(url_for("main.manage_users"))
 
-    # ✅ Prevent duplicate username
+    # Prevent duplicate username
     existing_user = User.query.filter_by(username=username).first()
     if existing_user and existing_user.id != user.id:
         flash("Username already taken", "danger")
         return redirect(url_for("main.manage_users"))
 
-    # ✅ Prevent removing your own admin rights
+    # Prevent removing your own admin rights
     if user.id == current_user.id and role != "admin":
         flash("You cannot remove your own admin rights", "warning")
         return redirect(url_for("main.manage_users"))
@@ -96,7 +94,6 @@ def edit_user(id):
 
     flash("User updated successfully", "success")
     return redirect(url_for("main.manage_users"))
-
 
 #####################
 # DELETE USER
@@ -111,7 +108,7 @@ def delete_user(id):
 
     user = User.query.get_or_404(id)
 
-    # ❗ Prevent deleting yourself
+    # Prevent deleting yourself
     if user.id == current_user.id:
         flash("You cannot delete your own account", "warning")
         return redirect(url_for("main.manage_users"))
@@ -122,7 +119,6 @@ def delete_user(id):
     flash("User deleted successfully", "success")
     return redirect(url_for("main.manage_users"))
 
-
 #####################
 # LOGIN
 #####################
@@ -130,17 +126,22 @@ def delete_user(id):
 @main.route("/", methods=["GET", "POST"])
 def login():
 
+    # ✅ Prevent redirect loop if already logged in
+    if current_user.is_authenticated:
+        if current_user.role == "admin":
+            return redirect(url_for("main.admin_dashboard"))
+        else:
+            return redirect(url_for("main.user_dashboard"))
+
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
+        username = request.form.get("username")
         password = request.form.get("password")
 
         user = User.query.filter_by(username=username).first()
 
-        # ✅ Validate user
         if user and user.check_password(password):
             login_user(user)
 
-            # ✅ Role-based redirect
             if user.role == "admin":
                 return redirect(url_for("main.admin_dashboard"))
             else:
@@ -149,7 +150,6 @@ def login():
         flash("Invalid username or password", "danger")
 
     return render_template("index.html")
-
 
 #####################
 # LOGOUT
@@ -162,7 +162,6 @@ def logout():
     flash("Logged out successfully", "success")
     return redirect(url_for("main.login"))
 
-
 #####################
 # DASHBOARDS
 #####################
@@ -174,10 +173,28 @@ def admin_dashboard():
     if current_user.role != "admin":
         abort(403)
 
-    return render_template("admin_dashboard.html")
+    from .weather_routes import get_forecast
 
+    forecast = get_forecast()
+    city = "Macheke,ZW"
+
+    return render_template(
+        "admin_dashboard.html",
+        forecast=forecast,
+        city=city
+    )
 
 @main.route("/user/dashboard")
 @login_required
 def user_dashboard():
-    return render_template("user_dashboard.html")
+
+    from .weather_routes import get_forecast
+
+    forecast = get_forecast()
+    city = "Macheke,ZW"
+
+    return render_template(
+        "user_dashboard.html",
+        forecast=forecast,
+        city=city
+    )

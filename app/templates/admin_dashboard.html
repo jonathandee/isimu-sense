@@ -4,147 +4,183 @@
 
 {% block content %}
 
-<h1 class="mb-4">Admin Dashboard</h1>
-
-<!-- ANALYTICS CARDS -->
-
-<div class="row g-4 mb-4">
-
-    <div class="col-md-3">
-        <div class="card text-bg-success shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">Active Plantings</h6>
-                <h3>{{ active_plantings }}</h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card text-bg-primary shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">Total Harvest</h6>
-                <h3>{{ total_harvest }}</h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card text-bg-warning shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">Inventory Items</h6>
-                <h3>{{ inventory_count }}</h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card text-bg-secondary shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">Fields</h6>
-                <h3>{{ field_count }}</h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card text-bg-info shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">Total Animals</h6>
-                <h3>{{ total_animals }}</h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card text-bg-dark shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">Total Income</h6>
-                <h3>{{ total_income }}</h3>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="card text-bg-danger shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">Total Expenses</h6>
-                <h3>{{ total_expenses }}</h3>
-            </div>
-        </div>
-    </div>
-
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold">👨‍💼 Admin</h1>
+    <span class="text-muted">System Control Panel</span>
 </div>
 
 <!-- MODULE CARDS -->
-
 <div class="row g-4">
 
     <!-- Crops -->
     <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Crops</h5>
-                <p class="card-text">Manage crop production and tracking.</p>
-                <a href="{{ url_for('main.crops') }}" class="btn btn-success">Open</a>
+        <a href="{{ url_for('main.crops') }}" class="text-decoration-none">
+            <div class="card elite-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>🌽 Crops</h5>
+                        <span class="badge bg-success-subtle text-success">Live</span>
+                    </div>
+                    <p class="text-muted small mt-2">Manage crop production and tracking</p>
+                    <h4 class="fw-bold mt-3">{{ crop_count or 0 }}</h4>
+                    <small class="text-muted">Active Crops</small>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Livestock -->
     <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Livestock</h5>
-                <p class="card-text">Track animals and production data.</p>
-                <a href="{{ url_for('main.livestock') }}" class="btn btn-success">Open</a>
+        <a href="{{ url_for('main.livestock') }}" class="text-decoration-none">
+            <div class="card elite-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>🐄 Livestock</h5>
+                        <span class="badge bg-danger-subtle text-danger">Live</span>
+                    </div>
+                    <p class="text-muted small mt-2">Track animals and production</p>
+                    <h4 class="fw-bold mt-3">{{ livestock_count or 0 }}</h4>
+                    <small class="text-muted">Total Animals</small>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Inventory -->
     <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Inventory</h5>
-                <p class="card-text">Manage farm inventory and supplies.</p>
-                <a href="{{ url_for('main.inventory') }}" class="btn btn-success">Open</a>
+        <a href="{{ url_for('main.inventory') }}" class="text-decoration-none">
+            <div class="card elite-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>📦 Inventory</h5>
+                        <span class="badge bg-primary-subtle text-primary">Stock</span>
+                    </div>
+                    <p class="text-muted small mt-2">Manage stock and supplies</p>
+                    <h4 class="fw-bold mt-3">{{ inventory_count or 0 }}</h4>
+                    <small class="text-muted">Items Available</small>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Finance -->
     <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Finance</h5>
-                <p class="card-text">Monitor income and expenses.</p>
-                <a href="{{ url_for('main.finance') }}" class="btn btn-success">Open</a>
+        <a href="{{ url_for('main.finance') }}" class="text-decoration-none">
+            <div class="card elite-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>💰 Finance</h5>
+                        <span class="badge bg-success-subtle text-success">Balance</span>
+                    </div>
+                    <p class="text-muted small mt-2">Monitor income & expenses</p>
+                    <h4 class="fw-bold mt-3">${{ balance or 0 }}</h4>
+                    <small class="text-muted">Current Balance</small>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Reports -->
     <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Reports</h5>
-                <p class="card-text">Farm analytics and performance reports.</p>
-                <a href="{{ url_for('main.reports') }}" class="btn btn-success">Open</a>
+        <a href="{{ url_for('main.reports') }}" class="text-decoration-none">
+            <div class="card elite-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>📊 Reports</h5>
+                        <span class="badge bg-warning-subtle text-warning">Insights</span>
+                    </div>
+                    <p class="text-muted small mt-2">Analytics & performance</p>
+                    <h4 class="fw-bold mt-3">Ready</h4>
+                    <small class="text-muted">Data Insights</small>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
-    <!-- 👑 Manage Users (NEW) -->
+    <!-- Manage Users -->
     <div class="col-md-4">
-        <div class="card shadow-sm border-danger">
-            <div class="card-body">
-                <h5 class="card-title text-danger">Manage Users</h5>
-                <p class="card-text">Create and manage system users.</p>
-                <a href="{{ url_for('main.manage_users') }}" class="btn btn-danger">Open</a>
+        <a href="{{ url_for('main.manage_users') }}" class="text-decoration-none">
+            <div class="card elite-card border-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-danger">👑 Users</h5>
+                        <span class="badge bg-danger-subtle text-danger">Admin</span>
+                    </div>
+                    <p class="text-muted small mt-2">Manage system users</p>
+                    <h4 class="fw-bold mt-3">Control</h4>
+                    <small class="text-danger">Restricted Access</small>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
 </div>
+
+<!-- WEATHER -->
+<div class="card elite-card mt-5">
+    <div class="card-body">
+
+        <h5 class="mb-4">
+            🌤️ Weather Forecast
+            <span class="text-muted small">- {{ city }}</span>
+        </h5>
+
+        <div class="row text-center">
+
+            {% for day in forecast %}
+            <div class="col">
+
+                <div class="weather-card p-3">
+
+                    <h6 class="fw-semibold mb-1">{{ day.day }}</h6>
+                    <small class="text-muted">{{ day.date }}</small>
+
+                    <img src="http://openweathermap.org/img/wn/{{ day.icon }}@2x.png">
+
+                    <h5 class="fw-bold mt-2">{{ day.temp }}°C</h5>
+                    <small class="text-muted text-capitalize">{{ day.weather }}</small>
+
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+</div>
+
+<!-- STYLES -->
+<style>
+    .elite-card {
+        border: none;
+        border-radius: 14px;
+        background: linear-gradient(145deg, #ffffff, #f1f5f9);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        transition: all 0.25s ease;
+        cursor: pointer;
+    }
+
+    .elite-card:hover {
+        transform: translateY(-6px) scale(1.01);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    .weather-card {
+        border-radius: 12px;
+        background: #f8fafc;
+        transition: 0.2s;
+    }
+
+    .weather-card:hover {
+        background: #e2e8f0;
+    }
+
+    .badge {
+        font-size: 0.7rem;
+        padding: 5px 8px;
+        border-radius: 8px;
+    }
+</style>
 
 {% endblock %}
