@@ -2,28 +2,36 @@
 
 {% block title %}Livestock{% endblock %}
 
+{% block page_title %}Livestock{% endblock %}
+
 {% block content %}
 
-<h1 class="mb-4">Livestock 🐄</h1>
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Livestock 🐄</h4>
+    <p class="text-muted small mb-0">
+        Manage animals, health, feeding, breeding, and production.
+    </p>
+</div>
 
-<p class="text-muted">Manage farm animals and production.</p>
+<!-- MODULE GRID -->
+<div class="row g-4">
 
-<hr>
-
-<div class="row g-4 mb-4">
-
-
+    <!-- ANIMAL TYPES -->
     <div class="col-md-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
 
-                <h5 class="card-title">Animal Types</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-diagram-3 fs-4 text-success me-2"></i>
+                    <h6 class="fw-semibold mb-0">Animal Types</h6>
+                </div>
 
-                <p class="card-text">
-                    Manage livestock categories and breeds.
+                <p class="text-muted small">
+                    Define livestock categories and breeds.
                 </p>
 
-                <a href="{{ url_for('main.animal_types') }}" class="btn btn-success">
+                <a href="{{ url_for('main.animal_types') }}" class="btn btn-light border btn-sm">
                     Open
                 </a>
 
@@ -31,17 +39,21 @@
         </div>
     </div>
 
+    <!-- ANIMALS -->
     <div class="col-md-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
 
-                <h5 class="card-title">Animals</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-tag fs-4 text-primary me-2"></i>
+                    <h6 class="fw-semibold mb-0">Animals</h6>
+                </div>
 
-                <p class="card-text">
-                    Manage individual livestock records.
+                <p class="text-muted small">
+                    Register and manage individual livestock.
                 </p>
 
-                <a href="{{ url_for('main.animals') }}" class="btn btn-success">
+                <a href="{{ url_for('main.animals') }}" class="btn btn-light border btn-sm">
                     Open
                 </a>
 
@@ -49,17 +61,21 @@
         </div>
     </div>
 
+    <!-- PRODUCTION -->
     <div class="col-md-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
 
-                <h5 class="card-title">Production</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-graph-up fs-4 text-warning me-2"></i>
+                    <h6 class="fw-semibold mb-0">Production</h6>
+                </div>
 
-                <p class="card-text">
-                    Record production.
+                <p class="text-muted small">
+                    Track milk, eggs, or other outputs.
                 </p>
 
-                <a href="{{ url_for('main.production') }}" class="btn btn-success">
+                <a href="{{ url_for('main.production') }}" class="btn btn-light border btn-sm">
                     Open
                 </a>
 
@@ -67,17 +83,21 @@
         </div>
     </div>
 
+    <!-- WEIGHT -->
     <div class="col-md-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
 
-                <h5 class="card-title">Weight Records</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-speedometer2 fs-4 text-info me-2"></i>
+                    <h6 class="fw-semibold mb-0">Weight Records</h6>
+                </div>
 
-                <p class="card-text">
-                    Track livestock weight growth.
+                <p class="text-muted small">
+                    Monitor animal growth and performance.
                 </p>
 
-                <a href="{{ url_for('main.weight_records') }}" class="btn btn-success">
+                <a href="{{ url_for('main.weight_records') }}" class="btn btn-light border btn-sm">
                     Open
                 </a>
 
@@ -85,39 +105,21 @@
         </div>
     </div>
 
+    <!-- HEALTH -->
     <div class="col-md-4">
-
-        <div class="card shadow-sm">
-
+        <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
 
-                <h5 class="card-title">Health Management</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-heart-pulse fs-4 text-danger me-2"></i>
+                    <h6 class="fw-semibold mb-0">Health</h6>
+                </div>
 
-                <p class="card-text">
-                    Record treatments, diseases and veterinary care.
+                <p class="text-muted small">
+                    Track diseases, treatments, and vet care.
                 </p>
 
-                <a href="{{ url_for('main.health_records') }}" class="btn btn-success">
-                    Open
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-
-                <h5 class="card-title">Breeding</h5>
-
-                <p class="card-text">
-                    Record breeding activities and offspring.
-                </p>
-
-                <a href="{{ url_for('main.breeding') }}" class="btn btn-success">
+                <a href="{{ url_for('main.health_records') }}" class="btn btn-light border btn-sm">
                     Open
                 </a>
 
@@ -125,39 +127,65 @@
         </div>
     </div>
 
+    <!-- BREEDING -->
     <div class="col-md-4">
-
-        <div class="card shadow-sm">
-
+        <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
 
-                <h5 class="card-title">Feed Management</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-git-branch fs-4 text-secondary me-2"></i>
+                    <h6 class="fw-semibold mb-0">Breeding</h6>
+                </div>
 
-                <p class="card-text">
-                    Record feed given to animals.
+                <p class="text-muted small">
+                    Manage reproduction and offspring records.
                 </p>
 
-                <a href="{{ url_for('main.feed_management') }}" class="btn btn-success">
+                <a href="{{ url_for('main.breeding') }}" class="btn btn-light border btn-sm">
                     Open
                 </a>
 
             </div>
-
         </div>
-
     </div>
 
+    <!-- FEED -->
     <div class="col-md-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
 
-                <h5 class="card-title">Animal Exits</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-box-seam fs-4 text-success me-2"></i>
+                    <h6 class="fw-semibold mb-0">Feed Management</h6>
+                </div>
 
-                <p class="card-text">
-                    Record sales, slaughter and deaths.
+                <p class="text-muted small">
+                    Track feeding and nutrition.
                 </p>
 
-                <a href="{{ url_for('main.exits') }}" class="btn btn-success">
+                <a href="{{ url_for('main.feed_management') }}" class="btn btn-light border btn-sm">
+                    Open
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- EXITS -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-box-arrow-right fs-4 text-danger me-2"></i>
+                    <h6 class="fw-semibold mb-0">Animal Exits</h6>
+                </div>
+
+                <p class="text-muted small">
+                    Record sales, deaths, and removals.
+                </p>
+
+                <a href="{{ url_for('main.exits') }}" class="btn btn-light border btn-sm">
                     Open
                 </a>
 

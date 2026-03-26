@@ -91,4 +91,109 @@
 
 </div>
 
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+
+        <h6 class="fw-semibold mb-3">System Users</h6>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+                    <tr class="small text-muted">
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for user in users %}
+
+                    <tr>
+
+                        <td class="fw-semibold">
+                            {{ user.username }}
+                        </td>
+
+                        <td>
+                            {% if user.role == "admin" %}
+                            <span class="badge bg-danger">Admin</span>
+                            {% else %}
+                            <span class="badge bg-secondary">User</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="text-end">
+
+                            <!-- EDIT -->
+                            <button class="btn btn-sm btn-outline-primary me-1" data-bs-toggle="modal"
+                                data-bs-target="#editUserModal{{ user.id }}">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+
+                            <!-- DELETE -->
+                            <a href="{{ url_for('main.delete_user', id=user.id) }}"
+                                class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this user?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    <!-- EDIT MODAL -->
+                    <div class="modal fade" id="editUserModal{{ user.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <form method="POST" action="{{ url_for('main.edit_user', id=user.id) }}">
+
+                                    <div class="modal-header">
+                                        <h6 class="modal-title">Edit User</h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <div class="modal-body">
+
+                                        <div class="mb-2">
+                                            <label class="small">Username</label>
+                                            <input type="text" name="username" class="form-control"
+                                                value="{{ user.username }}" required>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label class="small">Role</label>
+                                            <select name="role" class="form-select">
+                                                <option value="admin" {% if user.role == "admin" %}selected{% endif %}>
+                                                    Admin</option>
+                                                <option value="user" {% if user.role == "user" %}selected{% endif %}>
+                                                    User</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                        <button class="btn btn-success">Save</button>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
 {% endblock %}

@@ -2,190 +2,239 @@
 
 {% block title %}Applications{% endblock %}
 
+{% block page_title %}Crop Applications{% endblock %}
+
 {% block content %}
 
-<h1 class="mb-4">Crop Applications 🌱</h1>
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Crop Applications</h4>
+    <p class="text-muted small mb-0">
+        Record fertilizer and chemical applications across plantings.
+    </p>
+</div>
 
-<p class="text-muted">Record fertilizer and chemical applications.</p>
+<!-- ADD APPLICATION CARD -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
 
-<hr>
+        <h6 class="fw-semibold mb-3">Add Application</h6>
 
-<h4>Add Application</h4>
+        <form method="POST">
 
-<form method="POST">
+            <div class="row g-3">
 
-    <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Planting</label>
+                    <select name="planting" class="form-select" required>
+                        <option value="">Select planting</option>
+                        {% for planting in plantings %}
+                        <option value="{{ planting.id }}">
+                            {{ planting.crop_type.name }} - {{ planting.field.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-        <div class="col-md-2">
-            <select name="planting" class="form-control" required>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Inventory Item</label>
+                    <select name="inventory_item" class="form-select">
+                        <option value="">Optional</option>
+                        {% for item in inventory_items %}
+                        <option value="{{ item.id }}">
+                            {{ item.name }} ({{ item.quantity }} {{ item.unit }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-                <option value="">Planting</option>
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Manual Input</label>
+                    <input type="text" name="input_name" class="form-control" placeholder="e.g Fertilizer">
+                </div>
 
-                {% for planting in plantings %}
-                <option value="{{ planting.id }}">
-                    {{ planting.crop_type.name }} - {{ planting.field.name }}
-                </option>
-                {% endfor %}
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Quantity</label>
+                    <input type="number" step="0.01" name="quantity" class="form-control" placeholder="0.00">
+                </div>
 
-            </select>
-        </div>
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Date</label>
+                    <input type="date" name="date" class="form-control">
+                </div>
 
-        <div class="col-md-2">
-            <select name="inventory_item" class="form-control">
-                <option value="">Inventory Item</option>
+            </div>
 
-                {% for item in inventory_items %}
-                <option value="{{ item.id }}">
-                    {{ item.name }} ({{ item.quantity }} {{ item.unit }})
-                </option>
-                {% endfor %}
+            <div class="mt-3">
+                <label class="form-label small text-muted">Notes</label>
+                <textarea name="notes" class="form-control" placeholder="Optional notes..."></textarea>
+            </div>
 
-            </select>
-        </div>
+            <div class="mt-3">
+                <button class="btn btn-success px-4">
+                    <i class="bi bi-plus-lg"></i> Add Application
+                </button>
+            </div>
 
-        <div class="col-md-2">
-            <input type="text" name="input_name" class="form-control" placeholder="Manual input">
-        </div>
-
-        <div class="col-md-2">
-            <input type="number" step="0.01" name="quantity" class="form-control" placeholder="Quantity">
-        </div>
-
-        <div class="col-md-2">
-            <input type="date" name="date" class="form-control">
-        </div>
-
-        <div class="col-md-2">
-            <button class="btn btn-success w-100">Add</button>
-        </div>
+        </form>
 
     </div>
+</div>
 
-    <div class="mt-2">
-        <textarea name="notes" class="form-control" placeholder="Notes"></textarea>
-    </div>
+<!-- RECORDS CARD -->
+<div class="card shadow-sm border-0">
 
-</form>
+    <div class="card-body">
 
-<hr class="my-4">
+        <h6 class="fw-semibold mb-3">Application Records</h6>
 
-<h4>Application Records</h4>
+        <div class="table-responsive">
 
-<table class="table table-striped">
+            <table class="table table-hover align-middle">
 
-    <thead class="table-success">
+                <thead class="table-light">
+                    <tr class="small text-muted">
+                        <th>Planting</th>
+                        <th>Input</th>
+                        <th>Qty</th>
+                        <th>Unit</th>
+                        <th>Date</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
 
-        <tr>
-            <th>Planting</th>
-            <th>Input</th>
-            <th>Quantity</th>
-            <th>Unit</th>
-            <th>Date</th>
-            <th>Actions</th>
-        </tr>
+                <tbody>
 
-    </thead>
+                    {% for application in applications %}
 
-    <tbody>
+                    <tr>
 
-        {% for application in applications %}
+                        <td>
+                            <div class="fw-semibold">
+                                {{ application.planting.crop_type.name }}
+                            </div>
+                            <small class="text-muted">
+                                {{ application.planting.field.name }}
+                            </small>
+                        </td>
 
-        <tr>
+                        <td>
+                            {% if application.inventory_item %}
+                            {{ application.inventory_item.name }}
+                            {% else %}
+                            {{ application.input_name }}
+                            {% endif %}
+                        </td>
 
-            <td>
-                {{ application.planting.crop_type.name }}
-                - {{ application.planting.field.name }}
-            </td>
+                        <td>{{ application.quantity }}</td>
 
-            <td>
-                {% if application.inventory_item %}
-                {{ application.inventory_item.name }}
-                {% else %}
-                {{ application.input_name }}
-                {% endif %}
-            </td>
+                        <td>
+                            {% if application.inventory_item %}
+                            {{ application.inventory_item.unit }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
 
-            <td>{{ application.quantity }}</td>
+                        <td>{{ application.date }}</td>
 
-            <td>{{ application.inventory_item.unit }}</td>
+                        <td class="text-end">
 
-            <td>{{ application.date }}</td>
+                            <!-- EDIT BUTTON -->
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#editApplicationModal{{ application.id }}">
+                                <i class="bi bi-pencil"></i>
+                            </button>
 
-            <td>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#editApplicationModal{{ application.id }}"
-                    class="text-primary me-3">
-                    <i class="bi bi-pencil"></i>
-                </a>
-            </td>
+                        </td>
 
-        </tr>
+                    </tr>
 
-        <!-- Edit Application Modal -->
-        <div class="modal fade" id="editApplicationModal{{ application.id }}" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
+                    <!-- EDIT MODAL -->
+                    <div class="modal fade" id="editApplicationModal{{ application.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
 
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Application</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                <form method="POST" action="{{ url_for('main.edit_application', id=application.id) }}">
+
+                                    <div class="modal-header">
+                                        <h6 class="modal-title fw-semibold">Edit Application</h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <div class="modal-body">
+
+                                        <div class="mb-2">
+                                            <label class="form-label small">Input Name</label>
+                                            <input type="text" name="input_name" class="form-control"
+                                                value="{{ application.input_name }}">
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label class="form-label small">Quantity</label>
+                                            <input type="number" step="0.01" name="quantity" class="form-control"
+                                                value="{{ application.quantity }}">
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label class="form-label small">Date</label>
+                                            <input type="date" name="date" class="form-control"
+                                                value="{{ application.date }}">
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label class="form-label small">Notes</label>
+                                            <textarea name="notes"
+                                                class="form-control">{{ application.notes }}</textarea>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" class="btn btn-success">
+                                            Save Changes
+                                        </button>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
                     </div>
 
-                    <form method="POST" action="{{ url_for('main.edit_application', id=application.id) }}">
+                    {% else %}
 
-                        <div class="modal-body">
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            No applications recorded yet
+                        </td>
+                    </tr>
 
-                            <div class="mb-3">
-                                <label>Input Name</label>
-                                <input type="text" name="input_name" class="form-control"
-                                    value="{{ application.input_name }}">
-                            </div>
+                    {% endfor %}
 
-                            <div class="mb-3">
-                                <label>Quantity</label>
-                                <input type="number" step="0.01" name="quantity" class="form-control"
-                                    value="{{ application.quantity }}">
-                            </div>
+                </tbody>
 
-                            <div class="mb-3">
-                                <label>Date</label>
-                                <input type="date" name="date" class="form-control" value="{{ application.date }}">
-                            </div>
+            </table>
 
-                            <div class="mb-3">
-                                <label>Notes</label>
-                                <textarea name="notes" class="form-control">{{ application.notes }}</textarea>
-                            </div>
-
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-success">Save Changes</button>
-                        </div>
-
-                    </form>
-
-                </div>
-            </div>
         </div>
-        {% else %}
 
-        <tr>
-            <td colspan="6" class="text-center text-muted">
-                No applications recorded
-            </td>
-        </tr>
+    </div>
+</div>
 
-        {% endfor %}
-
-    </tbody>
-
-</table>
-
+<!-- BACK -->
 <div class="mt-4">
 
-    <a href="{{ url_for('main.crops') }}" class="btn btn-secondary">
-        ← Back to Crops
+    <a href="
+{% if current_user.role == 'admin' %}
+    {{ url_for('main.admin_dashboard') }}
+{% else %}
+    {{ url_for('main.user_dashboard') }}
+{% endif %}
+" class="btn btn-light border">
+        ← Back to Dashboard
     </a>
 
 </div>

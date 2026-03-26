@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory Reports{% endblock %}
+
+{% block page_title %}Inventory Reports{% endblock %}
+
+{% block content %}
+
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Inventory Reports 📊</h4>
+    <p class="text-muted small mb-0">
+        Monitor stock levels, category distribution, and low stock alerts.
+    </p>
+</div>
+
+<!-- SUMMARY -->
+<div class="row g-4 mb-4">
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted small">Total Items</h6>
+                <h3 class="fw-semibold text-success">{{ total_items }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted small">Low Stock</h6>
+                <h3 class="fw-semibold text-danger">
+                    {{ low_stock_items|length }}
+                </h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MAIN GRID -->
+<div class="row g-4">
+
+<!-- INVENTORY TABLE -->
+<div class="col-md-6">
+
+    <div class="card shadow-sm border-0 h-100">
+
+        <div class="card-body">
+
+            <h6 class="fw-semibold mb-3">Inventory Stock</h6>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-light">
+                        <tr class="small text-muted">
+                            <th>Item</th>
+                            <th>Category</th>
+                            <th>Qty</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                    {% for item in items %}
+
+                    <tr>
+                        <td class="fw-semibold">{{ item.name }}</td>
+
+                        <td>
+                            {{ item.category.name if item.category else "—" }}
+                        </td>
+
+                        <td>
+                            {% if item.quantity <= 0 %}
+                                <span class="text-danger fw-semibold">
+                                    {{ item.quantity }}
+                                </span>
+                            {% elif item.quantity < 10 %}
+                                <span class="text-warning fw-semibold">
+                                    {{ item.quantity }}
+                                </span>
+                            {% else %}
+                                {{ item.quantity }}
+                            {% endif %}
+                        </td>
+
+                        <td>{{ item.unit }}</td>
+                    </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CHART -->
+<div class="col-md-6">
+
+    <div class="card shadow-sm border-0 h-100">
+
+        <div class="card-body">
+
+            <h6 class="fw-semibold mb-3">Inventory by Category</h6>
+
+            <canvas id="inventoryChart" style="max-height: 300px;"></canvas>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- LOW STOCK ALERT -->
+<div class="card shadow-sm border-0 mt-4">
+
+    <div class="card-body">
+
+        <h6 class="fw-semibold mb-3 text-danger">Low Stock Alerts</h6>
+
+        {% if low_stock_items %}
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+                    <tr class="small text-muted">
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for item in low_stock_items %}
+
+                <tr>
+                    <td class="fw-semibold">{{ item.name }}</td>
+
+                    <td class="text-danger fw-semibold">
+                        {{ item.quantity }}
+                    </td>
+
+                    <td>{{ item.unit }}</td>
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="alert alert-success mb-0">
+            All inventory levels are sufficient.
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+<!-- BACK -->
+<div class="mt-4">
+
+<a href="
+{% if current_user.role == 'admin' %}
+    {{ url_for('main.inventory') }}
+{% else %}
+    {{ url_for('main.user_dashboard') }}
+{% endif %}
+" class="btn btn-light border">
+    ← Back
+</a>
+
+</div>
+
+<!-- CHART SCRIPT -->
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    let labels = [];
+    let values = [];
+
+    {% for category, total in category_totals.items() %}
+        labels.push("{{ category }}");
+        values.push({{ total }});
+    {% endfor %}
+
+    new Chart(document.getElementById("inventoryChart"), {
+        type: "pie",
+        data: {
+            labels: labels,
+            datasets: [{
+                data: values,
+                backgroundColor: [
+                    "#28a745",
+                    "#17a2b8",
+                    "#ffc107",
+                    "#fd7e14",
+                    "#6f42c1"
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: "bottom"
+                }
+            }
+        }
+    });
+
+});
+
+</script>
+
+{% endblock %}

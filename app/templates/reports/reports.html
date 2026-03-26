@@ -1,25 +1,26 @@
 {% extends "base.html" %}
 
 {% block title %}Farm Reports{% endblock %}
+{% block page_title %}Farm Analytics{% endblock %}
 
 {% block content %}
 
-<h1 class="mb-4">Farm Analytics 📊</h1>
-<p class="text-muted">
-    Overview of farm production, livestock performance, inventory and finances.
-</p>
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Farm Analytics 📊</h4>
+    <p class="text-muted small mb-0">
+        Central overview of farm performance across crops, livestock, inventory, and finance.
+    </p>
+</div>
 
-<hr>
-
-<!-- Summary KPIs -->
-
-<div class="row mb-4">
+<!-- KPI CARDS -->
+<div class="row g-3 mb-4">
 
     <div class="col-md-3">
         <div class="card shadow-sm border-0 text-center">
             <div class="card-body">
-                <h6 class="text-muted">Total Harvest</h6>
-                <h3 class="text-success fw-bold">{{ total_harvest }}</h3>
+                <h6 class="text-muted small">Total Harvest</h6>
+                <h3 class="fw-bold text-success">{{ total_harvest }}</h3>
             </div>
         </div>
     </div>
@@ -27,7 +28,7 @@
     <div class="col-md-3">
         <div class="card shadow-sm border-0 text-center">
             <div class="card-body">
-                <h6 class="text-muted">Livestock Production</h6>
+                <h6 class="text-muted small">Livestock Production</h6>
                 <h3 class="fw-bold">{{ total_livestock_production }}</h3>
             </div>
         </div>
@@ -36,7 +37,7 @@
     <div class="col-md-3">
         <div class="card shadow-sm border-0 text-center">
             <div class="card-body">
-                <h6 class="text-muted">Inventory Items</h6>
+                <h6 class="text-muted small">Inventory Items</h6>
                 <h3 class="fw-bold">{{ inventory_count }}</h3>
             </div>
         </div>
@@ -45,87 +46,147 @@
     <div class="col-md-3">
         <div class="card shadow-sm border-0 text-center">
             <div class="card-body">
-                <h6 class="text-muted">Farm Profit</h6>
+                <h6 class="text-muted small">Net Profit</h6>
+
+                {% if profit >= 0 %}
                 <h3 class="fw-bold text-success">{{ profit }}</h3>
+                {% else %}
+                <h3 class="fw-bold text-danger">{{ profit }}</h3>
+                {% endif %}
+
             </div>
         </div>
     </div>
 
 </div>
 
-<!-- Report Navigation -->
+<!-- QUICK INSIGHTS -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
 
-<div class="row">
+        <h6 class="fw-semibold mb-3">Quick Insights</h6>
 
-    <!-- Crop Reports -->
+        <div class="row">
+
+            <div class="col-md-4">
+                <small class="text-muted">Farm Status</small>
+                <div class="fw-semibold">
+                    {% if profit >= 0 %}
+                    Profitable ✅
+                    {% else %}
+                    Loss ⚠️
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <small class="text-muted">Inventory Status</small>
+                <div class="fw-semibold">
+                    {% if inventory_count > 0 %}
+                    Active Stock
+                    {% else %}
+                    No Inventory
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <small class="text-muted">Production Activity</small>
+                <div class="fw-semibold">
+                    {% if total_harvest > 0 or total_livestock_production > 0 %}
+                    Active Production
+                    {% else %}
+                    No Production Yet
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- REPORT MODULES -->
+<div class="row g-4">
+
+    <!-- CROPS -->
     <div class="col-md-3">
-        <div class="card shadow-sm border-0">
-            <div class="card-body text-center">
+        <div class="card shadow-sm border-0 h-100 text-center">
+            <div class="card-body">
 
-                <h5>Crop Reports 🌾</h5>
+                <i class="bi bi-flower1 fs-3 text-success"></i>
+
+                <h6 class="fw-semibold mt-2">Crop Reports</h6>
+
                 <p class="text-muted small">
-                    Harvest and yield analytics
+                    Yield, harvest, and field performance
                 </p>
 
-                <a href="{{ url_for('main.crop_reports') }}" class="btn btn-success">
-                    Open
+                <a href="{{ url_for('main.crop_reports') }}" class="btn btn-success btn-sm">
+                    View
                 </a>
 
             </div>
         </div>
     </div>
 
-
-    <!-- Livestock Reports -->
+    <!-- LIVESTOCK -->
     <div class="col-md-3">
-        <div class="card shadow-sm border-0">
-            <div class="card-body text-center">
+        <div class="card shadow-sm border-0 h-100 text-center">
+            <div class="card-body">
 
-                <h5>Livestock Reports 🐄</h5>
+                <i class="bi bi-droplet-half fs-3 text-success"></i>
+
+                <h6 class="fw-semibold mt-2">Livestock Reports</h6>
+
                 <p class="text-muted small">
-                    Production, breeding and health
+                    Production, health, and breeding
                 </p>
 
-                <a href="{{ url_for('main.livestock_reports') }}" class="btn btn-success">
-                    Open
+                <a href="{{ url_for('main.livestock_reports') }}" class="btn btn-success btn-sm">
+                    View
                 </a>
 
             </div>
         </div>
     </div>
 
-
-    <!-- Inventory Reports -->
+    <!-- INVENTORY -->
     <div class="col-md-3">
-        <div class="card shadow-sm border-0">
-            <div class="card-body text-center">
+        <div class="card shadow-sm border-0 h-100 text-center">
+            <div class="card-body">
 
-                <h5>Inventory Reports 📦</h5>
+                <i class="bi bi-box-seam fs-3 text-success"></i>
+
+                <h6 class="fw-semibold mt-2">Inventory Reports</h6>
+
                 <p class="text-muted small">
-                    Stock levels and usage
+                    Stock levels and usage trends
                 </p>
 
-                <a href="{{ url_for('main.inventory_reports') }}" class="btn btn-success">
-                    Open
+                <a href="{{ url_for('main.inventory_reports') }}" class="btn btn-success btn-sm">
+                    View
                 </a>
 
             </div>
         </div>
     </div>
 
-
-    <!-- Finance Reports -->
+    <!-- FINANCE -->
     <div class="col-md-3">
-        <div class="card shadow-sm border-0">
-            <div class="card-body text-center">
+        <div class="card shadow-sm border-0 h-100 text-center">
+            <div class="card-body">
 
-                <h5>Finance Reports 💰</h5>
+                <i class="bi bi-cash-stack fs-3 text-success"></i>
+
+                <h6 class="fw-semibold mt-2">Finance Reports</h6>
+
                 <p class="text-muted small">
-                    Income, expenses and profit
+                    Income, expenses, and profitability
                 </p>
 
-                <a href="{{ url_for('main.finance_reports') }}" class="btn btn-success">
-                    Open
+                <a href="{{ url_for('main.finance_reports') }}" class="btn btn-success btn-sm">
+                    View
                 </a>
 
             </div>

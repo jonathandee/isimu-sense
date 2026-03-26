@@ -1,22 +1,26 @@
 {% extends "base.html" %}
 
 {% block title %}Finance Reports{% endblock %}
+{% block page_title %}Finance Reports{% endblock %}
 
 {% block content %}
 
-<h1 class="mb-4">Finance Reports 💰</h1>
-<p class="text-muted">Farm financial performance and transaction analysis.</p>
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Finance Reports 💰</h4>
+    <p class="text-muted small mb-0">
+        Analyze farm income, expenses, and profitability.
+    </p>
+</div>
 
-<hr>
-
-<!-- Summary Cards -->
-<div class="row mb-4">
+<!-- SUMMARY CARDS -->
+<div class="row g-3 mb-4">
 
     <div class="col-md-4">
         <div class="card shadow-sm border-0 text-center">
             <div class="card-body">
-                <h6 class="text-muted">Total Income</h6>
-                <h3 class="text-success fw-bold">{{ income }}</h3>
+                <h6 class="text-muted small">Total Income</h6>
+                <h3 class="fw-bold text-success">{{ income }}</h3>
             </div>
         </div>
     </div>
@@ -24,8 +28,8 @@
     <div class="col-md-4">
         <div class="card shadow-sm border-0 text-center">
             <div class="card-body">
-                <h6 class="text-muted">Total Expenses</h6>
-                <h3 class="text-danger fw-bold">{{ expenses }}</h3>
+                <h6 class="text-muted small">Total Expenses</h6>
+                <h3 class="fw-bold text-danger">{{ expenses }}</h3>
             </div>
         </div>
     </div>
@@ -33,63 +37,88 @@
     <div class="col-md-4">
         <div class="card shadow-sm border-0 text-center">
             <div class="card-body">
-                <h6 class="text-muted">Net Profit</h6>
-                <h3 class="fw-bold">{{ profit }}</h3>
+                <h6 class="text-muted small">Net Profit</h6>
+
+                {% if profit >= 0 %}
+                <h3 class="fw-bold text-success">{{ profit }}</h3>
+                {% else %}
+                <h3 class="fw-bold text-danger">{{ profit }}</h3>
+                {% endif %}
+
             </div>
         </div>
     </div>
 
 </div>
 
-<div class="row">
+<!-- MAIN CONTENT -->
+<div class="row g-4">
 
-    <!-- Transactions Table -->
-    <div class="col-md-6">
+    <!-- TRANSACTIONS -->
+    <div class="col-lg-7">
 
-        <div class="card shadow-sm border-0">
-
-            <div class="card-header bg-success text-white">
-                Transaction History
-            </div>
+        <div class="card shadow-sm border-0 h-100">
 
             <div class="card-body">
 
-                <table class="table table-hover">
+                <h6 class="fw-semibold mb-3">Transaction History</h6>
 
-                    <thead class="table-light">
-                        <tr>
-                            <th>Type</th>
-                            <th>Category</th>
-                            <th>Description</th>
-                            <th>Amount</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
+                <div class="table-responsive">
 
-                    <tbody>
+                    <table class="table table-hover align-middle">
 
-                        {% for t in transactions %}
+                        <thead class="table-light">
+                            <tr class="small text-muted">
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
 
-                        <tr>
-                            <td>
-                                {% if t.type == "income" %}
-                                <span class="badge bg-success">Income</span>
-                                {% else %}
-                                <span class="badge bg-danger">Expense</span>
-                                {% endif %}
-                            </td>
+                        <tbody>
 
-                            <td>{{ t.category.name }}</td>
-                            <td>{{ t.description }}</td>
-                            <td>{{ t.amount }}</td>
-                            <td>{{ t.date }}</td>
-                        </tr>
+                            {% for t in transactions %}
 
-                        {% endfor %}
+                            <tr>
+                                <td>
+                                    {% if t.type == "income" %}
+                                    <span class="badge bg-success">Income</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Expense</span>
+                                    {% endif %}
+                                </td>
 
-                    </tbody>
+                                <td>{{ t.category.name }}</td>
+                                <td>{{ t.description or "-" }}</td>
 
-                </table>
+                                <td class="fw-semibold">
+                                    {% if t.type == "income" %}
+                                    <span class="text-success">+{{ t.amount }}</span>
+                                    {% else %}
+                                    <span class="text-danger">-{{ t.amount }}</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ t.date }}</td>
+                            </tr>
+
+                            {% else %}
+
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    No transactions recorded
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
 
             </div>
 
@@ -97,16 +126,14 @@
 
     </div>
 
-    <!-- Finance Chart -->
-    <div class="col-md-6">
+    <!-- CHART -->
+    <div class="col-lg-5">
 
-        <div class="card shadow-sm border-0">
-
-            <div class="card-header bg-success text-white">
-                Financial Overview
-            </div>
+        <div class="card shadow-sm border-0 h-100">
 
             <div class="card-body">
+
+                <h6 class="fw-semibold mb-3">Financial Overview</h6>
 
                 <canvas id="financeChart"></canvas>
 
@@ -118,15 +145,14 @@
 
 </div>
 
+<!-- BACK -->
 <div class="mt-4">
-
-    <a href="{{ url_for('main.reports') }}" class="btn btn-secondary">
+    <a href="{{ url_for('main.reports') }}" class="btn btn-light border">
         ← Back to Reports
     </a>
-
 </div>
 
-
+<!-- CHART -->
 <script>
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -144,13 +170,19 @@
                 "#dc3545"
             ]
         }]
-},
+        },
 
         options: {
-        responsive: true
+        responsive: true,
+        cutout: "60%",
+        plugins: {
+            legend: {
+                position: "bottom"
+            }
+        }
     }
 
-});
+    });
 
 });
 

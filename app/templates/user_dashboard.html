@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Operations Dashboard{% endblock %}
+
+{% block page_title %}Farm Operations{% endblock %}
+
+{% block content %}
+
+<h4 class="mb-4">Today's Overview</h4>
+
+<!-- QUICK STATS -->
+
+<div class="row g-4 mb-4">
+
+    <div class="col-md-4">
+        <div class="card border-success shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted">Active Plantings</h6>
+                <h3 class="text-success">{{ active_plantings }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-primary shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted">Total Animals</h6>
+                <h3 class="text-primary">{{ total_animals }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-warning shadow-sm">
+            <div class="card-body">
+                <h6 class="text-muted">Inventory Items</h6>
+                <h3 class="text-warning">{{ inventory_count }}</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+---
+
+<!-- QUICK ACTIONS -->
+
+<h5 class="mb-3">Quick Actions</h5>
+
+<div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+        <a href="{{ url_for('main.plantings') }}" class="text-decoration-none">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-seedling fs-2 text-success"></i>
+                    <h6 class="mt-2">New Planting</h6>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3">
+        <a href="{{ url_for('main.applications') }}" class="text-decoration-none">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-droplet fs-2 text-primary"></i>
+                    <h6 class="mt-2">Apply Inputs</h6>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3">
+        <a href="{{ url_for('main.harvest') }}" class="text-decoration-none">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-basket fs-2 text-warning"></i>
+                    <h6 class="mt-2">Record Harvest</h6>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3">
+        <a href="{{ url_for('main.livestock') }}" class="text-decoration-none">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <i class="bi bi-heart-pulse fs-2 text-danger"></i>
+                    <h6 class="mt-2">Livestock Records</h6>
+                </div>
+            </div>
+        </a>
+    </div>
+
+</div>
+
+---
+
+<!-- MODULE ACCESS -->
+
+<h5 class="mb-3">Operations</h5>
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Crops</h6>
+                <p class="text-muted small">Planting, applications, harvesting</p>
+                <a href="{{ url_for('main.crops') }}" class="btn btn-success btn-sm">Open</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Livestock</h6>
+                <p class="text-muted small">Animal tracking and production</p>
+                <a href="{{ url_for('main.livestock') }}" class="btn btn-success btn-sm">Open</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Inventory</h6>
+                <p class="text-muted small">Stock and usage tracking</p>
+                <a href="{{ url_for('main.inventory') }}" class="btn btn-success btn-sm">Open</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

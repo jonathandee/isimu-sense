@@ -2,71 +2,104 @@
 
 {% block title %}Feed Management{% endblock %}
 
+{% block page_title %}Feed Management{% endblock %}
+
 {% block content %}
 
-<h1 class="mb-4">Feed Management 🌾</h1>
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Feed Management 🌾</h4>
+    <p class="text-muted small mb-0">
+        Manage livestock nutrition, feed types, and feeding activities.
+    </p>
+</div>
 
-<p class="text-muted">
-    Manage livestock feed types and feeding records.
-</p>
-
-<hr>
-
+<!-- MODULE GRID -->
 <div class="row g-4">
 
-    <!-- Feed Types -->
-
+    <!-- FEED TYPES -->
     <div class="col-md-4">
-
-        <div class="card shadow-sm">
-
+        <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
 
-                <h5 class="card-title">Feed Types</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-box-seam fs-4 text-success me-2"></i>
+                    <h6 class="fw-semibold mb-0">Feed Types</h6>
+                </div>
 
-                <p class="card-text">
-                    Manage types of feed used on the farm.
+                <p class="text-muted small">
+                    Define and manage different types of livestock feed.
                 </p>
 
-                <a href="{{ url_for('main.feed_types') }}" class="btn btn-success">
+                <a href="{{ url_for('main.feed_types') }}" class="btn btn-light border btn-sm">
                     Open
                 </a>
 
             </div>
-
         </div>
-
     </div>
 
-
-    <!-- Feeding Records -->
-
+    <!-- FEEDING RECORDS -->
     <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
 
-        <div class="card shadow-sm">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-clipboard-data fs-4 text-primary me-2"></i>
+                    <h6 class="fw-semibold mb-0">Feeding Records</h6>
+                </div>
+
+                <p class="text-muted small">
+                    Track feed consumption and feeding schedules.
+                </p>
+
+                <a href="{{ url_for('main.feed_records') }}" class="btn btn-light border btn-sm">
+                    Open
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- (FUTURE) FEED REPORTS -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
 
             <div class="card-body">
 
-                <h5 class="card-title">Feeding Records</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-bar-chart fs-4 text-warning me-2"></i>
+                    <h6 class="fw-semibold mb-0">Reports</h6>
+                </div>
 
-                <p class="card-text">
-                    Record feed given to animals.
+                <p class="text-muted small">
+                    Analyze feed usage, costs, and efficiency.
                 </p>
 
-                <a href="{{ url_for('main.feed_records') }}" class="btn btn-success">
-                    Open
+                <a href="#" class="btn btn-light border btn-sm disabled">
+                    Coming Soon
                 </a>
 
             </div>
 
         </div>
-
     </div>
 
 </div>
 
-<a href="{{ url_for('main.livestock') }}" class="btn btn-secondary mt-4">
-    ← Back to Livestock
-</a>
+<!-- BACK -->
+<div class="mt-4">
+
+    <a href="
+{% if current_user.role == 'admin' %}
+    {{ url_for('main.livestock') }}
+{% else %}
+    {{ url_for('main.user_dashboard') }}
+{% endif %}
+" class="btn btn-light border">
+        ← Back to Livestock
+    </a>
+
+</div>
 
 {% endblock %}

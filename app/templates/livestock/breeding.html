@@ -2,68 +2,104 @@
 
 {% block title %}Breeding{% endblock %}
 
+{% block page_title %}Breeding{% endblock %}
+
 {% block content %}
 
-<h1 class="mb-4">Breeding 🐄</h1>
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Breeding 🐄</h4>
+    <p class="text-muted small mb-0">
+        Manage livestock reproduction, breeding cycles, and birth tracking.
+    </p>
+</div>
 
-<p class="text-muted">
-    Manage livestock reproduction records.
-</p>
-
+<!-- MODULE GRID -->
 <div class="row g-4">
 
-    <!-- Breeding Events -->
-
+    <!-- BREEDING EVENTS -->
     <div class="col-md-4">
-
-        <div class="card shadow-sm">
-
+        <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
 
-                <h5 class="card-title">Breeding Events</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-heart-pulse fs-4 text-danger me-2"></i>
+                    <h6 class="fw-semibold mb-0">Breeding Events</h6>
+                </div>
 
-                <p class="card-text">
-                    Record mating between animals (Natural or AI).
+                <p class="text-muted small">
+                    Record mating events (natural or artificial insemination).
                 </p>
 
-                <a href="{{ url_for('main.breeding_events') }}" class="btn btn-success">
+                <a href="{{ url_for('main.breeding_events') }}" class="btn btn-light border btn-sm">
                     Open
                 </a>
 
             </div>
-
         </div>
-
     </div>
 
-    <!-- Birth Records -->
-
+    <!-- BIRTH RECORDS -->
     <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
 
-        <div class="card shadow-sm">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-egg fs-4 text-success me-2"></i>
+                    <h6 class="fw-semibold mb-0">Birth Records</h6>
+                </div>
+
+                <p class="text-muted small">
+                    Track offspring and livestock population growth.
+                </p>
+
+                <a href="{{ url_for('main.births') }}" class="btn btn-light border btn-sm">
+                    Open
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- (OPTIONAL FUTURE) BREEDING REPORTS -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
 
             <div class="card-body">
 
-                <h5 class="card-title">Birth Records</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-bar-chart fs-4 text-warning me-2"></i>
+                    <h6 class="fw-semibold mb-0">Reports</h6>
+                </div>
 
-                <p class="card-text">
-                    Record births and add offspring to livestock stock.
+                <p class="text-muted small">
+                    Analyze breeding success, birth rates, and herd growth.
                 </p>
 
-                <a href="{{ url_for('main.births') }}" class="btn btn-success">
-                    Open
+                <a href="#" class="btn btn-light border btn-sm disabled">
+                    Coming Soon
                 </a>
 
             </div>
 
         </div>
-
     </div>
 
 </div>
 
-<a href="{{ url_for('main.livestock') }}" class="btn btn-secondary mt-4">
-    Back to Livestock
-</a>
+<!-- BACK -->
+<div class="mt-4">
+
+    <a href="
+{% if current_user.role == 'admin' %}
+    {{ url_for('main.livestock') }}
+{% else %}
+    {{ url_for('main.user_dashboard') }}
+{% endif %}
+" class="btn btn-light border">
+        ← Back to Livestock
+    </a>
+
+</div>
 
 {% endblock %}

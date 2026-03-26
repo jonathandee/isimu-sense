@@ -2,46 +2,50 @@
 
 {% block title %}Crop Reports{% endblock %}
 
+{% block page_title %}Crop Reports{% endblock %}
+
 {% block content %}
 
-<h1 class="mb-4">Crop Reports 🌾</h1>
-<p class="text-muted">Harvest production records and crop performance.</p>
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Crop Reports 🌾</h4>
+    <p class="text-muted small mb-0">
+        Monitor harvest performance, yields, and crop productivity.
+    </p>
+</div>
 
-<hr>
-
-<!-- Summary Cards -->
-<div class="row mb-4">
+<!-- SUMMARY -->
+<div class="row g-3 mb-4">
 
     <div class="col-md-3">
         <div class="card shadow-sm border-0 text-center">
             <div class="card-body">
-                <h6 class="text-muted">Total Harvest Records</h6>
-                <h3 class="text-success fw-bold">{{ harvests|length }}</h3>
+                <h6 class="text-muted small">Total Harvest Records</h6>
+                <h3 class="fw-bold text-success">{{ harvests|length }}</h3>
             </div>
         </div>
     </div>
 
 </div>
 
-<div class="row">
+<!-- MAIN CONTENT -->
+<div class="row g-4">
 
-    <!-- Harvest Table -->
-    <div class="col-md-6">
+    <!-- HARVEST TABLE -->
+    <div class="col-lg-6">
 
-        <div class="card shadow-sm border-0">
-
-            <div class="card-header bg-success text-white">
-                Harvest Records
-            </div>
+        <div class="card shadow-sm border-0 h-100">
 
             <div class="card-body">
+
+                <h6 class="fw-semibold mb-3">Harvest Records</h6>
 
                 <div class="table-responsive">
 
                     <table class="table table-hover align-middle">
 
                         <thead class="table-light">
-                            <tr>
+                            <tr class="small text-muted">
                                 <th>Crop</th>
                                 <th>Field</th>
                                 <th>Quantity</th>
@@ -55,11 +59,21 @@
                             {% for harvest in harvests %}
 
                             <tr>
-                                <td>{{ harvest.planting.crop_type.name }}</td>
+                                <td class="fw-semibold">
+                                    {{ harvest.planting.crop_type.name }}
+                                </td>
                                 <td>{{ harvest.planting.field.name }}</td>
                                 <td>{{ harvest.quantity }}</td>
                                 <td>{{ harvest.unit }}</td>
                                 <td>{{ harvest.date }}</td>
+                            </tr>
+
+                            {% else %}
+
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    No harvest records yet
+                                </td>
                             </tr>
 
                             {% endfor %}
@@ -71,22 +85,22 @@
                 </div>
 
             </div>
+
         </div>
 
     </div>
 
+    <!-- PRODUCTION CHART -->
+    <div class="col-lg-6">
 
-    <!-- Production Chart -->
-    <div class="col-md-6">
-
-        <div class="card shadow-sm border-0">
-
-            <div class="card-header bg-success text-white">
-                Production by Crop
-            </div>
+        <div class="card shadow-sm border-0 h-100">
 
             <div class="card-body">
+
+                <h6 class="fw-semibold mb-3">Production by Crop</h6>
+
                 <canvas id="cropChart"></canvas>
+
             </div>
 
         </div>
@@ -95,43 +109,53 @@
 
 </div>
 
+<!-- FIELD YIELD SECTION -->
+<div class="row g-4 mt-1">
 
-<!-- Yield Per Field Analysis -->
-<div class="row mt-4">
+    <!-- TABLE -->
+    <div class="col-lg-6">
 
-    <div class="col-md-6">
-
-        <div class="card shadow-sm border-0">
-
-            <div class="card-header bg-success text-white">
-                Yield Per Field
-            </div>
+        <div class="card shadow-sm border-0 h-100">
 
             <div class="card-body">
 
-                <table class="table table-hover">
+                <h6 class="fw-semibold mb-3">Yield Per Field</h6>
 
-                    <thead class="table-light">
-                        <tr>
-                            <th>Field</th>
-                            <th>Total Yield</th>
-                        </tr>
-                    </thead>
+                <div class="table-responsive">
 
-                    <tbody>
+                    <table class="table table-hover align-middle">
 
-                        {% for field, total in field_yields.items() %}
+                        <thead class="table-light">
+                            <tr class="small text-muted">
+                                <th>Field</th>
+                                <th>Total Yield</th>
+                            </tr>
+                        </thead>
 
-                        <tr>
-                            <td>{{ field }}</td>
-                            <td>{{ total }}</td>
-                        </tr>
+                        <tbody>
 
-                        {% endfor %}
+                            {% for field, total in field_yields.items() %}
 
-                    </tbody>
+                            <tr>
+                                <td class="fw-semibold">{{ field }}</td>
+                                <td>{{ total }}</td>
+                            </tr>
 
-                </table>
+                            {% else %}
+
+                            <tr>
+                                <td colspan="2" class="text-center text-muted py-4">
+                                    No yield data available
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
 
             </div>
 
@@ -139,17 +163,14 @@
 
     </div>
 
+    <!-- CHART -->
+    <div class="col-lg-6">
 
-    <!-- Yield Chart -->
-    <div class="col-md-6">
-
-        <div class="card shadow-sm border-0">
-
-            <div class="card-header bg-success text-white">
-                Field Yield Chart
-            </div>
+        <div class="card shadow-sm border-0 h-100">
 
             <div class="card-body">
+
+                <h6 class="fw-semibold mb-3">Field Yield Distribution</h6>
 
                 <canvas id="fieldChart"></canvas>
 
@@ -161,62 +182,68 @@
 
 </div>
 
-
+<!-- BACK -->
 <div class="mt-4">
-
-    <a href="{{ url_for('main.reports') }}" class="btn btn-secondary">
+    <a href="{{ url_for('main.reports') }}" class="btn btn-light border">
         ← Back to Reports
     </a>
-
 </div>
 
-
+<!-- CHARTS -->
 <script>
 
     document.addEventListener("DOMContentLoaded", function () {
 
-        let cropLabels = [];
-        let cropValues = [];
+        /* Crop Chart */
+        let cropMap = {};
 
         {% for harvest in harvests %}
+        let crop = "{{ harvest.planting.crop_type.name }}";
+        let qty = {{ harvest.quantity }
+    };
 
-        cropLabels.push("{{ harvest.planting.crop_type.name }}");
-        cropValues.push({{ harvest.quantity }});
-
+    if (!cropMap[crop]) {
+        cropMap[crop] = 0;
+    }
+    cropMap[crop] += qty;
     {% endfor %}
+
+    let cropLabels = Object.keys(cropMap);
+    let cropValues = Object.values(cropMap);
 
     new Chart(document.getElementById("cropChart"), {
         type: "bar",
         data: {
             labels: cropLabels,
             datasets: [{
-                label: "Harvest Quantity",
+                label: "Total Production",
                 data: cropValues,
-                backgroundColor: "rgba(40,167,69,0.7)"
+                backgroundColor: "rgba(40,167,69,0.7)",
+                borderRadius: 6
             }]
         },
         options: {
             responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
             scales: {
                 y: { beginAtZero: true }
             }
         }
     });
 
-
-
+    /* Field Chart */
     let fieldLabels = [];
     let fieldValues = [];
 
     {% for field, total in field_yields.items() %}
-
     fieldLabels.push("{{ field }}");
     fieldValues.push({{ total }});
-
     {% endfor %}
 
     new Chart(document.getElementById("fieldChart"), {
-        type: "pie",
+        type: "doughnut",
         data: {
             labels: fieldLabels,
             datasets: [{
@@ -231,7 +258,8 @@
             }]
         },
         options: {
-            responsive: true
+            responsive: true,
+            cutout: "60%"
         }
     });
 

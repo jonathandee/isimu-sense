@@ -2,156 +2,185 @@
 
 {% block title %}Plantings{% endblock %}
 
+{% block page_title %}Plantings{% endblock %}
+
 {% block content %}
 
-<h1 class="mb-4">Plantings 🌱</h1>
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Plantings 🌱</h4>
+    <p class="text-muted small mb-0">
+        Track crop planting activities and field allocation.
+    </p>
+</div>
 
-<p class="text-muted">Record crop planting activities.</p>
+<!-- ADD PLANTING -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
 
-<hr>
+        <h6 class="fw-semibold mb-3">Add Planting</h6>
 
-<h4>Add Planting</h4>
+        <form method="POST">
 
-<form method="POST">
+            <div class="row g-3">
 
-    <div class="row">
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Crop</label>
+                    <select name="crop_type" class="form-select" required>
+                        <option value="">Select crop</option>
+                        {% for crop in crops %}
+                        <option value="{{ crop.id }}">
+                            {{ crop.name }}{% if crop.variety %} ({{ crop.variety }}){% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-        <div class="col-md-3">
-            <select name="crop_type" class="form-control" required>
-                <option value="">Crop</option>
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Field</label>
+                    <select name="field" class="form-select" required>
+                        <option value="">Select field</option>
+                        {% for field in fields %}
+                        <option value="{{ field.id }}">
+                            {{ field.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-                {% for crop in crops %}
-                <option value="{{ crop.id }}">
-                    {{ crop.name }}{% if crop.variety %} ({{ crop.variety }}){% endif %}
-                </option>
-                {% endfor %}
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Planting Date</label>
+                    <input type="date" name="planting_date" class="form-control" required>
+                </div>
 
-            </select>
-        </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Expected Harvest</label>
+                    <input type="date" name="expected_harvest" class="form-control">
+                </div>
 
-        <div class="col-md-2">
-            <select name="field" class="form-control" required>
-                <option value="">Field</option>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-success w-100">
+                        <i class="bi bi-plus-lg"></i> Add
+                    </button>
+                </div>
 
-                {% for field in fields %}
-                <option value="{{ field.id }}">
-                    {{ field.name }}
-                </option>
-                {% endfor %}
+            </div>
 
-            </select>
-        </div>
+        </form>
 
-        <div class="col-md-2">
-            <input type="date" name="planting_date" class="form-control" required>
-        </div>
+    </div>
+</div>
 
-        <div class="col-md-2">
-            <input type="date" name="expected_harvest" class="form-control">
-        </div>
+<!-- PLANTINGS TABLE -->
+<div class="card shadow-sm border-0">
 
-        <div class="col-md-2">
-            <button class="btn btn-success w-100">
-                Add
-            </button>
+    <div class="card-body">
+
+        <h6 class="fw-semibold mb-3">Planting Records</h6>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-light">
+                    <tr class="small text-muted">
+                        <th>Crop</th>
+                        <th>Field</th>
+                        <th>Planting Date</th>
+                        <th>Expected Harvest</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for planting in plantings %}
+
+                    <tr>
+
+                        <td>
+                            <div class="fw-semibold">
+                                {{ planting.crop_type.name }}
+                            </div>
+                            <small class="text-muted">
+                                {% if planting.crop_type.variety %}
+                                {{ planting.crop_type.variety }}
+                                {% else %}
+                                -
+                                {% endif %}
+                            </small>
+                        </td>
+
+                        <td>{{ planting.field.name }}</td>
+
+                        <td>{{ planting.planting_date }}</td>
+
+                        <td>
+                            {{ planting.expected_harvest or '-' }}
+                        </td>
+
+                        <td>
+                            {% if planting.status == "active" %}
+                            <span class="badge bg-success-subtle text-success">
+                                Active
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary-subtle text-secondary">
+                                Completed
+                            </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="text-end">
+
+                            {% if planting.status == "active" %}
+
+                            <a href="{{ url_for('main.complete_planting', id=planting.id) }}"
+                                class="btn btn-sm btn-outline-warning">
+                                Complete
+                            </a>
+
+                            {% else %}
+
+                            <span class="text-muted small">—</span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            No plantings recorded yet
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
         </div>
 
     </div>
+</div>
 
-</form>
-
-<hr class="my-4">
-
-<h4>Planting Records</h4>
-
-<table class="table table-striped">
-
-    <thead class="table-success">
-
-        <tr>
-            <th>Crop</th>
-            <th>Field</th>
-            <th>Planting Date</th>
-            <th>Expected Harvest</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        {% for planting in plantings %}
-
-        <tr>
-
-            <td>
-                {{ planting.crop_type.name }}
-                {% if planting.crop_type.variety %}
-                ({{ planting.crop_type.variety }})
-                {% endif %}
-            </td>
-
-            <td>{{ planting.field.name }}</td>
-
-            <td>{{ planting.planting_date }}</td>
-
-            <td>
-                {% if planting.expected_harvest %}
-                {{ planting.expected_harvest }}
-                {% else %}
-                <span class="text-muted">-</span>
-                {% endif %}
-            </td>
-
-            <td>
-                {% if planting.status == "active" %}
-                <span class="badge bg-success">Active</span>
-                {% else %}
-                <span class="badge bg-secondary">Completed</span>
-                {% endif %}
-            </td>
-
-            <td>
-
-                {% if planting.status == "active" %}
-
-                <a href="{{ url_for('main.complete_planting', id=planting.id) }}" class="btn btn-sm btn-warning">
-
-                    Complete
-
-                </a>
-
-                {% else %}
-
-                <span class="text-muted">—</span>
-
-                {% endif %}
-
-            </td>
-
-        </tr>
-
-        {% else %}
-
-        <tr>
-            <td colspan="6" class="text-center text-muted">
-                No plantings recorded
-            </td>
-        </tr>
-
-        {% endfor %}
-
-    </tbody>
-
-</table>
-
+<!-- BACK BUTTON -->
 <div class="mt-4">
 
-    <a href="{{ url_for('main.crops') }}" class="btn btn-secondary">
-
-        ← Back to Crops
-
+    <a href="
+{% if current_user.role == 'admin' %}
+    {{ url_for('main.admin_dashboard') }}
+{% else %}
+    {{ url_for('main.user_dashboard') }}
+{% endif %}
+" class="btn btn-light border">
+        ← Back to Dashboard
     </a>
 
 </div>

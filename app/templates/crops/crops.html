@@ -2,59 +2,36 @@
 
 {% block title %}Crops Module{% endblock %}
 
-{% block content %}
-<h1 class="mb-4">Crops Management 🌱</h1>
+{% block page_title %}Crops Management{% endblock %}
 
+{% block content %}
+
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Crops Management 🌱</h4>
+    <p class="text-muted small mb-0">
+        Manage crop production, fields, and activities.
+    </p>
+</div>
+
+<!-- MODULE GRID -->
 <div class="row g-4">
 
-    <!-- 1. Crops -->
+    <!-- FIELD CROPS -->
     <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Field Crops</h5>
-                <p class="card-text">Manage crop types and varieties.</p>
-                <a href="{{ url_for('main.crop_types') }}" class="btn btn-success">
-                    Open
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- 2. Fields -->
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Fields</h5>
-                <p class="card-text">Manage farm fields and plots.</p>
-                <a href="{{ url_for('main.fields') }}" class="btn btn-success">
-                    Open
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. Plantings -->
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Plantings</h5>
-                <p class="card-text">Track crop planting activities.</p>
-                <a href="{{ url_for('main.plantings') }}" class="btn btn-success">
-                    Open
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. Applications -->
-    <div class="col-md-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
 
-                <h5 class="card-title">Applications</h5>
-                <p class="card-text">Record crop applications.</p>
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-seedling fs-4 text-success me-2"></i>
+                    <h6 class="fw-semibold mb-0">Field Crops</h6>
+                </div>
 
-                <a href="{{ url_for('main.applications') }}" class="btn btn-success">
+                <p class="text-muted small">
+                    Manage crop types and varieties.
+                </p>
+
+                <a href="{{ url_for('main.crop_types') }}" class="btn btn-light border btn-sm">
                     Open
                 </a>
 
@@ -62,18 +39,108 @@
         </div>
     </div>
 
-    <!-- 5. Harvest -->
+    <!-- FIELDS -->
     <div class="col-md-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0 h-100">
             <div class="card-body">
-                <h5 class="card-title">Harvest</h5>
-                <p class="card-text">Track harvest yields and dates.</p>
-                <a href="{{ url_for('main.harvest') }}" class="btn btn-success">
+
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-map fs-4 text-primary me-2"></i>
+                    <h6 class="fw-semibold mb-0">Fields</h6>
+                </div>
+
+                <p class="text-muted small">
+                    Manage farm fields and plots.
+                </p>
+
+                <a href="{{ url_for('main.fields') }}" class="btn btn-light border btn-sm">
                     Open
-                    </a>
+                </a>
+
             </div>
         </div>
     </div>
+
+    <!-- PLANTINGS -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-calendar-check fs-4 text-success me-2"></i>
+                    <h6 class="fw-semibold mb-0">Plantings</h6>
+                </div>
+
+                <p class="text-muted small">
+                    Track crop planting activities.
+                </p>
+
+                <a href="{{ url_for('main.plantings') }}" class="btn btn-light border btn-sm">
+                    Open
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- APPLICATIONS -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-droplet fs-4 text-info me-2"></i>
+                    <h6 class="fw-semibold mb-0">Applications</h6>
+                </div>
+
+                <p class="text-muted small">
+                    Record fertilizer and chemical applications.
+                </p>
+
+                <a href="{{ url_for('main.applications') }}" class="btn btn-light border btn-sm">
+                    Open
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- HARVEST -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-basket fs-4 text-warning me-2"></i>
+                    <h6 class="fw-semibold mb-0">Harvest</h6>
+                </div>
+
+                <p class="text-muted small">
+                    Track harvest yields and production.
+                </p>
+
+                <a href="{{ url_for('main.harvest') }}" class="btn btn-light border btn-sm">
+                    Open
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- BACK BUTTON -->
+<div class="mt-4">
+
+    <a href="
+{% if current_user.role == 'admin' %}
+    {{ url_for('main.admin_dashboard') }}
+{% else %}
+    {{ url_for('main.user_dashboard') }}
+{% endif %}
+" class="btn btn-light border">
+        ← Back to Dashboard
+    </a>
 
 </div>
 

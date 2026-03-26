@@ -2,240 +2,242 @@
 
 {% block title %}Birth Records{% endblock %}
 
+{% block page_title %}Birth Records{% endblock %}
+
 {% block content %}
 
-<h1 class="mb-4">Birth Records</h1>
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Birth Records 🐣</h4>
+    <p class="text-muted small mb-0">
+        Track livestock births from breeding events.
+    </p>
+</div>
 
-<p class="text-muted">Record livestock births resulting from breeding events.</p>
+<!-- ADD BIRTH -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
 
-<hr>
+        <h6 class="fw-semibold mb-3">Record Birth</h6>
 
-<h4>Record Birth</h4>
+        <form method="POST" id="birthForm">
 
-<form method="POST" id="birthForm">
+            <div class="row g-3">
 
-    <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label small text-muted">Breeding Event</label>
+                    <select name="breeding_event" id="breeding_event" class="form-select" required>
+                        <option value="">Select event</option>
+                        {% for event in breeding_events %}
+                        <option value="{{ event.id }}">
+                            {{ event.female.tag_number }} ×
+                            {{ event.male.tag_number if event.male else "AI" }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-        <div class="col-md-3">
-            <select name="breeding_event" id="breeding_event" class="form-control" required>
+                <div class="col-md-2">
+                    <label class="form-label small text-muted">Birth Date</label>
+                    <input type="date" name="birth_date" id="birth_date" class="form-control" required>
+                </div>
 
-                <option value="">Breeding Event</option>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted">Offspring Breed</label>
+                    <input type="text" name="offspring_breed" class="form-control" placeholder="Optional">
+                </div>
 
-                {% for event in breeding_events %}
+                <div class="col-md-1">
+                    <label class="form-label small text-muted">Male</label>
+                    <input type="number" name="male_offspring" id="male_offspring" class="form-control" value="0"
+                        min="0">
+                </div>
 
-                <option value="{{ event.id }}">
-                    {{ event.female.tag_number }} × {{ event.male.tag_number if event.male else "AI" }}
-                </option>
+                <div class="col-md-1">
+                    <label class="form-label small text-muted">Female</label>
+                    <input type="number" name="female_offspring" id="female_offspring" class="form-control" value="0"
+                        min="0">
+                </div>
 
-                {% endfor %}
+                <div class="col-md-12">
+                    <label class="form-label small text-muted">Notes</label>
+                    <textarea name="notes" class="form-control" placeholder="Optional notes"></textarea>
+                </div>
 
-            </select>
-        </div>
+                <div class="col-md-2">
+                    <button class="btn btn-success w-100">
+                        <i class="bi bi-plus-lg"></i> Record
+                    </button>
+                </div>
 
-        <div class="col-md-2">
-            <input type="date" name="birth_date" id="birth_date" class="form-control" required>
-        </div>
+            </div>
 
-        <div class="col-md-2">
-            <input type="text" name="offspring_breed" class="form-control" placeholder="Offspring Breed">
-        </div>
-
-        <div class="col-md-2">
-            <input type="number" name="male_offspring" id="male_offspring" class="form-control" value="0" min="0"
-                placeholder="Male">
-        </div>
-
-        <div class="col-md-2">
-            <input type="number" name="female_offspring" id="female_offspring" class="form-control" value="0" min="0"
-                placeholder="Female">
-        </div>
-
-        <div class="col-md-1">
-            <button class="btn btn-success w-100">
-                Add
-            </button>
-        </div>
+        </form>
 
     </div>
+</div>
 
-    <div class="mt-2">
-        <textarea name="notes" class="form-control" placeholder="Notes"></textarea>
-    </div>
+<!-- TABLE -->
+<div class="card shadow-sm border-0">
 
-</form>
+    <div class="card-body">
 
-<hr class="my-4">
+        <h6 class="fw-semibold mb-3">Birth Records</h6>
 
-<h4>Birth Records</h4>
+        <div class="table-responsive">
 
-<table class="table table-striped">
+            <table class="table table-hover align-middle">
 
-    <thead class="table-success">
+                <thead class="table-light">
+                    <tr class="small text-muted">
+                        <th>Breeding</th>
+                        <th>Date</th>
+                        <th>Breed</th>
+                        <th>Male</th>
+                        <th>Female</th>
+                        <th>Total</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
 
-        <tr>
-            <th>Breeding</th>
-            <th>Birth Date</th>
-            <th>Breed</th>
-            <th>Male</th>
-            <th>Female</th>
-            <th>Actions</th>
-        </tr>
+                <tbody>
 
-    </thead>
+                    {% for b in births %}
 
-    <tbody>
+                    <tr>
 
-        {% for b in births %}
+                        <td class="fw-semibold">
+                            {% if b.breeding_event %}
+                            {{ b.breeding_event.female.tag_number }} ×
+                            {{ b.breeding_event.male.tag_number if b.breeding_event.male else "AI" }}
+                            {% else %}
+                            <span class="text-muted">Unknown</span>
+                            {% endif %}
+                        </td>
 
-        <tr>
+                        <td>{{ b.birth_date }}</td>
 
-            <td>
-            <td>
+                        <td>
+                            {{ b.offspring_breed or "—" }}
+                        </td>
 
-                {% if b.breeding_event %}
+                        <td>{{ b.male_offspring }}</td>
 
-                {{ b.breeding_event.female.tag_number }} ×
-                {{ b.breeding_event.male.tag_number if b.breeding_event.male else "AI" }}
+                        <td>{{ b.female_offspring }}</td>
 
-                {% else %}
+                        <td class="fw-semibold">
+                            {{ b.male_offspring + b.female_offspring }}
+                        </td>
 
-                <span class="text-muted">Unknown Breeding</span>
+                        <td class="text-end">
 
-                {% endif %}
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                data-bs-target="#editBirthModal{{ b.id }}">
+                                <i class="bi bi-pencil"></i>
+                            </button>
 
-            </td>
-            </td>
+                        </td>
 
-            <td>{{ b.birth_date }}</td>
+                    </tr>
 
-            <td>
-                {% if b.offspring_breed %}
-                {{ b.offspring_breed }}
-                {% else %}
-                <span class="text-muted">-</span>
-                {% endif %}
-            </td>
+                    <!-- EDIT MODAL -->
+                    <div class="modal fade" id="editBirthModal{{ b.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
 
-            <td>{{ b.male_offspring }}</td>
+                                <form method="POST" action="{{ url_for('main.edit_birth', id=b.id) }}">
 
-            <td>{{ b.female_offspring }}</td>
+                                    <div class="modal-header">
+                                        <h6 class="modal-title fw-semibold">
+                                            Edit Birth Record
+                                        </h6>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
 
-            <td>
+                                    <div class="modal-body">
 
-                <a href="#" data-bs-toggle="modal" data-bs-target="#editBirthModal{{ b.id }}" class="text-primary">
+                                        <div class="mb-2">
+                                            <label class="form-label small">Birth Date</label>
+                                            <input type="date" name="birth_date" class="form-control"
+                                                value="{{ b.birth_date }}">
+                                        </div>
 
-                    <i class="bi bi-pencil"></i>
+                                        <div class="mb-2">
+                                            <label class="form-label small">Breed</label>
+                                            <input type="text" name="offspring_breed" class="form-control"
+                                                value="{{ b.offspring_breed }}">
+                                        </div>
 
-                </a>
+                                        <div class="mb-2">
+                                            <label class="form-label small">Male</label>
+                                            <input type="number" name="male_offspring" class="form-control"
+                                                value="{{ b.male_offspring }}">
+                                        </div>
 
-            </td>
+                                        <div class="mb-2">
+                                            <label class="form-label small">Female</label>
+                                            <input type="number" name="female_offspring" class="form-control"
+                                                value="{{ b.female_offspring }}">
+                                        </div>
 
-        </tr>
+                                        <div class="mb-2">
+                                            <label class="form-label small">Notes</label>
+                                            <textarea name="notes" class="form-control">{{ b.notes }}</textarea>
+                                        </div>
 
-        <!-- Edit Birth Modal -->
+                                    </div>
 
-        <div class="modal fade" id="editBirthModal{{ b.id }}" tabindex="-1">
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" class="btn btn-success">
+                                            Save Changes
+                                        </button>
+                                    </div>
 
-            <div class="modal-dialog">
-                <div class="modal-content">
+                                </form>
 
-                    <div class="modal-header">
-
-                        <h5 class="modal-title">Edit Birth Record</h5>
-
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
+                            </div>
+                        </div>
                     </div>
 
-                    <form method="POST" action="{{ url_for('main.edit_birth', id=b.id) }}">
+                    {% else %}
 
-                        <div class="modal-body">
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            No birth records recorded yet
+                        </td>
+                    </tr>
 
-                            <div class="mb-3">
-                                <label>Birth Date</label>
+                    {% endfor %}
 
-                                <input type="date" name="birth_date" class="form-control" value="{{ b.birth_date }}">
-                            </div>
+                </tbody>
 
-                            <div class="mb-3">
-                                <label>Offspring Breed</label>
+            </table>
 
-                                <input type="text" name="offspring_breed" class="form-control"
-                                    value="{{ b.offspring_breed }}">
-                            </div>
-
-                            <div class="mb-3">
-                                <label>Male Offspring</label>
-
-                                <input type="number" name="male_offspring" class="form-control"
-                                    value="{{ b.male_offspring }}">
-                            </div>
-
-                            <div class="mb-3">
-                                <label>Female Offspring</label>
-
-                                <input type="number" name="female_offspring" class="form-control"
-                                    value="{{ b.female_offspring }}">
-                            </div>
-
-                            <div class="mb-3">
-                                <label>Notes</label>
-
-                                <textarea name="notes" class="form-control">{{ b.notes }}</textarea>
-
-                            </div>
-
-                        </div>
-
-                        <div class="modal-footer">
-
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-
-                                Cancel
-
-                            </button>
-
-                            <button type="submit" class="btn btn-success">
-
-                                Save Changes
-
-                            </button>
-
-                        </div>
-
-                    </form>
-
-                </div>
-            </div>
         </div>
 
-        {% else %}
+    </div>
+</div>
 
-        <tr>
-            <td colspan="6" class="text-center text-muted">
-                No birth records recorded
-            </td>
-        </tr>
-
-        {% endfor %}
-
-    </tbody>
-
-</table>
-
+<!-- BACK -->
 <div class="mt-4">
 
-    <a href="{{ url_for('main.breeding') }}" class="btn btn-secondary">
-
-        ← Back to Breeding
-
+    <a href="
+{% if current_user.role == 'admin' %}
+    {{ url_for('main.breeding') }}
+{% else %}
+    {{ url_for('main.user_dashboard') }}
+{% endif %}
+" class="btn btn-light border">
+        ← Back
     </a>
 
 </div>
 
+<!-- VALIDATION -->
 <script>
-
-    /* Birth form validation */
 
     let form = document.getElementById("birthForm");
 
@@ -246,34 +248,21 @@
         let male = parseInt(document.getElementById("male_offspring").value);
         let female = parseInt(document.getElementById("female_offspring").value);
 
-        /* breeding event required */
-
         if (!event) {
-
             alert("Please select a breeding event.");
             e.preventDefault();
             return;
-
         }
 
-        /* birth date required */
-
         if (!birthDate) {
-
             alert("Please select a birth date.");
             e.preventDefault();
             return;
-
         }
 
-        /* at least one offspring required */
-
         if (male === 0 && female === 0) {
-
             alert("Please record at least one offspring.");
             e.preventDefault();
-            return;
-
         }
 
     });
