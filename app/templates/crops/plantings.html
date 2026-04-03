@@ -174,15 +174,15 @@
 <div class="mt-4">
 
     <a href="
-{% if current_user.role == 'admin' %}
-    {{ url_for('main.admin_dashboard') }}
-{% else %}
-    {{ url_for('main.user_dashboard') }}
-{% endif %}
-" class="btn btn-light border">
-        ← Back to Dashboard
+  {% if current_user.role == 'admin' %}
+      {{ url_for('main.crops') }}
+  {% else %}
+      {{ url_for('main.crops') }}
+  {% endif %}
+  " class="btn btn-light border">
+      ← Back
     </a>
-
-</div>
+  
+  </div>
 
 {% endblock %}

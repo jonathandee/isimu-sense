@@ -19,14 +19,44 @@
 
             <div class="card-body">
 
-                <form method="POST">
+                <form method="POST" onsubmit="return validatePassword()">
 
                     <div class="mb-3">
                         <input type="text" name="username" class="form-control" placeholder="Username" required>
                     </div>
 
-                    <div class="mb-3">
-                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    <!-- PASSWORD -->
+                    <div class="mb-3 position-relative">
+                        <input type="password" id="password" name="password" class="form-control pe-5"
+                            placeholder="Password" required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}"
+                            title="Must contain at least 8 characters, including uppercase, lowercase, number, and special character">
+
+                        <i class="bi bi-eye-slash toggle-password" onclick="togglePassword('password', this)"></i>
+                    </div>
+
+                    <!-- CONFIRM PASSWORD -->
+                    <div class="mb-3 position-relative">
+                        <input type="password" id="confirm_password" name="confirm_password" class="form-control pe-5"
+                            placeholder="Confirm Password" required>
+
+                        <i class="bi bi-eye-slash toggle-password"
+                            onclick="togglePassword('confirm_password', this)"></i>
+                    </div>
+
+                    <div class="mb-2 small">
+
+                        <strong>Password requirements:</strong>
+
+                        <ul class="mb-0" id="password-rules">
+
+                            <li id="rule-length" class="text-danger"> At least 8 characters</li>
+                            <li id="rule-upper" class="text-danger"> Uppercase letter</li>
+                            <li id="rule-lower" class="text-danger"> Lowercase letter</li>
+                            <li id="rule-number" class="text-danger"> Number</li>
+                            <li id="rule-special" class="text-danger"> Special character</li>
+
+                        </ul>
+
                     </div>
 
                     <div class="mb-3">
@@ -195,5 +225,51 @@
         </div>
     </div>
 </div>
+
+<!-- PASSWORD VALIDATION SCRIPT -->
+<script>
+    function validatePassword() {
+        const password = document.getElementById("password").value;
+        const confirm = document.getElementById("confirm_password").value;
+
+        // 🔐 Strong password rules
+        const hasLength = password.length >= 8;
+        const hasUpper = /[A-Z]/.test(password);
+        const hasLower = /[a-z]/.test(password);
+        const hasNumber = /\d/.test(password);
+        const hasSpecial = /[\W_]/.test(password);
+
+        // ❌ Check match
+        if (password !== confirm) {
+            alert("Passwords do not match!");
+            return false;
+        }
+
+        // ❌ Check strength
+        if (!(hasLength && hasUpper && hasLower && hasNumber && hasSpecial)) {
+            alert("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
+            return false;
+        }
+
+        // ✅ All good
+        return true;
+    }
+</script>
+
+<script>
+    function togglePassword(fieldId, icon) {
+        const input = document.getElementById(fieldId);
+    
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("bi-eye-slash");
+            icon.classList.add("bi-eye");
+        } else {
+            input.type = "password";
+            icon.classList.remove("bi-eye");
+            icon.classList.add("bi-eye-slash");
+        }
+    }
+    </script>
 
 {% endblock %}

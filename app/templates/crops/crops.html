@@ -18,113 +18,103 @@
 <div class="row g-4">
 
     <!-- FIELD CROPS -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
+    <div class="col-md-4 col-sm-6">
+        <a href="{{ url_for('main.crop_types') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 clickable-card">
+                <div class="card-body">
 
-                <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-seedling fs-4 text-success me-2"></i>
-                    <h6 class="fw-semibold mb-0">Field Crops</h6>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-flower1 fs-4 text-success me-2"></i>
+                        <h6 class="fw-semibold mb-0">Field Crops</h6>
+                    </div>
+
+                    <p class="text-muted small">
+                        Manage crop types and varieties.
+                    </p>
+
                 </div>
-
-                <p class="text-muted small">
-                    Manage crop types and varieties.
-                </p>
-
-                <a href="{{ url_for('main.crop_types') }}" class="btn btn-light border btn-sm">
-                    Open
-                </a>
-
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- FIELDS -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
+    <div class="col-md-4 col-sm-6">
+        <a href="{{ url_for('main.fields') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 clickable-card">
+                <div class="card-body">
 
-                <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-map fs-4 text-primary me-2"></i>
-                    <h6 class="fw-semibold mb-0">Fields</h6>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-map fs-4 text-primary me-2"></i>
+                        <h6 class="fw-semibold mb-0">Fields</h6>
+                    </div>
+
+                    <p class="text-muted small">
+                        Manage farm fields and plots.
+                    </p>
+
                 </div>
-
-                <p class="text-muted small">
-                    Manage farm fields and plots.
-                </p>
-
-                <a href="{{ url_for('main.fields') }}" class="btn btn-light border btn-sm">
-                    Open
-                </a>
-
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- PLANTINGS -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
+    <div class="col-md-4 col-sm-6">
+        <a href="{{ url_for('main.plantings') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 clickable-card">
+                <div class="card-body">
 
-                <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-calendar-check fs-4 text-success me-2"></i>
-                    <h6 class="fw-semibold mb-0">Plantings</h6>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-calendar-check fs-4 text-success me-2"></i>
+                        <h6 class="fw-semibold mb-0">Plantings</h6>
+                    </div>
+
+                    <p class="text-muted small">
+                        Track crop planting activities.
+                    </p>
+
                 </div>
-
-                <p class="text-muted small">
-                    Track crop planting activities.
-                </p>
-
-                <a href="{{ url_for('main.plantings') }}" class="btn btn-light border btn-sm">
-                    Open
-                </a>
-
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- APPLICATIONS -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
+    <div class="col-md-4 col-sm-6">
+        <a href="{{ url_for('main.applications') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 clickable-card">
+                <div class="card-body">
 
-                <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-droplet fs-4 text-info me-2"></i>
-                    <h6 class="fw-semibold mb-0">Applications</h6>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-droplet-fill fs-4 text-info me-2"></i>
+                        <h6 class="fw-semibold mb-0">Applications</h6>
+                    </div>
+
+                    <p class="text-muted small">
+                        Record fertilizer and chemical applications.
+                    </p>
+
                 </div>
-
-                <p class="text-muted small">
-                    Record fertilizer and chemical applications.
-                </p>
-
-                <a href="{{ url_for('main.applications') }}" class="btn btn-light border btn-sm">
-                    Open
-                </a>
-
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- HARVEST -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
+    <div class="col-md-4 col-sm-6">
+        <a href="{{ url_for('main.harvest') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 clickable-card">
+                <div class="card-body">
 
-                <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-basket fs-4 text-warning me-2"></i>
-                    <h6 class="fw-semibold mb-0">Harvest</h6>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-box-seam fs-4 text-warning me-2"></i>
+                        <h6 class="fw-semibold mb-0">Harvest</h6>
+                    </div>
+
+                    <p class="text-muted small">
+                        Track harvest yields and production.
+                    </p>
+
                 </div>
-
-                <p class="text-muted small">
-                    Track harvest yields and production.
-                </p>
-
-                <a href="{{ url_for('main.harvest') }}" class="btn btn-light border btn-sm">
-                    Open
-                </a>
-
             </div>
-        </div>
+        </a>
     </div>
 
 </div>
@@ -134,14 +124,28 @@
 
     <a href="
 {% if current_user.role == 'admin' %}
-    {{ url_for('main.admin_dashboard') }}
+ {{ url_for('main.admin_dashboard') }}
 {% else %}
-    {{ url_for('main.user_dashboard') }}
+ {{ url_for('main.user_dashboard') }}
 {% endif %}
 " class="btn btn-light border">
         ← Back to Dashboard
     </a>
 
 </div>
+
+<!-- STYLES -->
+<style>
+    .clickable-card {
+        transition: all 0.25s ease;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+
+    .clickable-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+</style>
 
 {% endblock %}

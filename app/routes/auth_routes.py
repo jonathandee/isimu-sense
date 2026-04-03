@@ -1,3 +1,4 @@
+import re
 from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_user, logout_user, login_required, current_user
 from sqlalchemy.exc import IntegrityError
@@ -8,6 +9,10 @@ from .. import db
 #####################
 # USER MANAGEMENT
 #####################
+
+def is_strong_password(password):
+    return re.match(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$', password)
+
 
 @main.route("/admin/users", methods=["GET", "POST"])
 @login_required
@@ -21,18 +26,28 @@ def manage_users():
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
         role = request.form.get("role")
 
-        # ✅ Validation
+        # ✅ Basic validation
         if not username or not password:
             flash("Username and password are required", "danger")
             return redirect(url_for("main.manage_users"))
 
-        if len(password) < 4:
-            flash("Password must be at least 4 characters", "warning")
+        # ✅ Confirm password check
+        if password != confirm_password:
+            flash("Passwords do not match", "danger")
             return redirect(url_for("main.manage_users"))
 
-        # ✅ Check duplicate
+        # ✅ Strong password validation
+        if not is_strong_password(password):
+            flash(
+                "Password must be at least 8 characters and include uppercase, lowercase, number, and special character",
+                "danger"
+            )
+            return redirect(url_for("main.manage_users"))
+
+        # ✅ Check duplicate username
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             flash("Username already exists", "danger")
@@ -53,6 +68,7 @@ def manage_users():
 
         return redirect(url_for("main.manage_users"))
 
+    # ✅ GET request
     users = User.query.all()
     return render_template("manage_users.html", users=users)
 

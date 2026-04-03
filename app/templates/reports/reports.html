@@ -16,8 +16,8 @@
 <!-- KPI CARDS -->
 <div class="row g-3 mb-4">
 
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 text-center">
+    <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 text-center h-100">
             <div class="card-body">
                 <h6 class="text-muted small">Total Harvest</h6>
                 <h3 class="fw-bold text-success">{{ total_harvest }}</h3>
@@ -25,8 +25,8 @@
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 text-center">
+    <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 text-center h-100">
             <div class="card-body">
                 <h6 class="text-muted small">Livestock Production</h6>
                 <h3 class="fw-bold">{{ total_livestock_production }}</h3>
@@ -34,8 +34,8 @@
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 text-center">
+    <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 text-center h-100">
             <div class="card-body">
                 <h6 class="text-muted small">Inventory Items</h6>
                 <h3 class="fw-bold">{{ inventory_count }}</h3>
@@ -43,8 +43,8 @@
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 text-center">
+    <div class="col-md-3 col-sm-6">
+        <div class="card shadow-sm border-0 text-center h-100">
             <div class="card-body">
                 <h6 class="text-muted small">Net Profit</h6>
 
@@ -68,7 +68,7 @@
 
         <div class="row">
 
-            <div class="col-md-4">
+            <div class="col-md-4 col-sm-6 mb-2">
                 <small class="text-muted">Farm Status</small>
                 <div class="fw-semibold">
                     {% if profit >= 0 %}
@@ -79,7 +79,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 col-sm-6 mb-2">
                 <small class="text-muted">Inventory Status</small>
                 <div class="fw-semibold">
                     {% if inventory_count > 0 %}
@@ -90,7 +90,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 col-sm-6 mb-2">
                 <small class="text-muted">Production Activity</small>
                 <div class="fw-semibold">
                     {% if total_harvest > 0 or total_livestock_production > 0 %}
@@ -110,89 +110,95 @@
 <div class="row g-4">
 
     <!-- CROPS -->
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 h-100 text-center">
-            <div class="card-body">
+    <div class="col-md-3 col-sm-6">
+        <a href="{{ url_for('main.crop_reports') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 text-center clickable-card">
+                <div class="card-body">
 
-                <i class="bi bi-flower1 fs-3 text-success"></i>
+                    <i class="bi bi-flower1 fs-3 text-success"></i>
 
-                <h6 class="fw-semibold mt-2">Crop Reports</h6>
+                    <h6 class="fw-semibold mt-2">Crop Reports</h6>
 
-                <p class="text-muted small">
-                    Yield, harvest, and field performance
-                </p>
+                    <p class="text-muted small">
+                        Yield, harvest, and field performance
+                    </p>
 
-                <a href="{{ url_for('main.crop_reports') }}" class="btn btn-success btn-sm">
-                    View
-                </a>
-
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- LIVESTOCK -->
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 h-100 text-center">
-            <div class="card-body">
+    <div class="col-md-3 col-sm-6">
+        <a href="{{ url_for('main.livestock_reports') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 text-center clickable-card">
+                <div class="card-body">
 
-                <i class="bi bi-droplet-half fs-3 text-success"></i>
+                    <i class="bi bi-heart-pulse fs-3 text-danger"></i>
 
-                <h6 class="fw-semibold mt-2">Livestock Reports</h6>
+                    <h6 class="fw-semibold mt-2">Livestock Reports</h6>
 
-                <p class="text-muted small">
-                    Production, health, and breeding
-                </p>
+                    <p class="text-muted small">
+                        Production, health, and breeding
+                    </p>
 
-                <a href="{{ url_for('main.livestock_reports') }}" class="btn btn-success btn-sm">
-                    View
-                </a>
-
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- INVENTORY -->
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 h-100 text-center">
-            <div class="card-body">
+    <div class="col-md-3 col-sm-6">
+        <a href="{{ url_for('main.inventory_reports') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 text-center clickable-card">
+                <div class="card-body">
 
-                <i class="bi bi-box-seam fs-3 text-success"></i>
+                    <i class="bi bi-box-seam fs-3 text-primary"></i>
 
-                <h6 class="fw-semibold mt-2">Inventory Reports</h6>
+                    <h6 class="fw-semibold mt-2">Inventory Reports</h6>
 
-                <p class="text-muted small">
-                    Stock levels and usage trends
-                </p>
+                    <p class="text-muted small">
+                        Stock levels and usage trends
+                    </p>
 
-                <a href="{{ url_for('main.inventory_reports') }}" class="btn btn-success btn-sm">
-                    View
-                </a>
-
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- FINANCE -->
-    <div class="col-md-3">
-        <div class="card shadow-sm border-0 h-100 text-center">
-            <div class="card-body">
+    <div class="col-md-3 col-sm-6">
+        <a href="{{ url_for('main.finance_reports') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 text-center clickable-card">
+                <div class="card-body">
 
-                <i class="bi bi-cash-stack fs-3 text-success"></i>
+                    <i class="bi bi-cash-stack fs-3 text-success"></i>
 
-                <h6 class="fw-semibold mt-2">Finance Reports</h6>
+                    <h6 class="fw-semibold mt-2">Finance Reports</h6>
 
-                <p class="text-muted small">
-                    Income, expenses, and profitability
-                </p>
+                    <p class="text-muted small">
+                        Income, expenses, and profitability
+                    </p>
 
-                <a href="{{ url_for('main.finance_reports') }}" class="btn btn-success btn-sm">
-                    View
-                </a>
-
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
 </div>
+
+<!-- STYLES -->
+<style>
+    .clickable-card {
+        transition: all 0.25s ease;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+
+    .clickable-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+</style>
 
 {% endblock %}

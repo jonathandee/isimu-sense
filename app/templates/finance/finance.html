@@ -18,52 +18,49 @@
 <div class="row g-4">
 
     <!-- TRANSACTIONS -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
+    <div class="col-md-4 col-sm-6">
+        <a href="{{ url_for('main.finance_transactions') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 clickable-card">
+                <div class="card-body">
 
-                <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-cash-coin fs-4 text-success me-2"></i>
-                    <h6 class="fw-semibold mb-0">Transactions</h6>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-cash-coin fs-4 text-success me-2"></i>
+                        <h6 class="fw-semibold mb-0">Transactions</h6>
+                    </div>
+
+                    <p class="text-muted small">
+                        Record and track all income and expenses.
+                    </p>
+
                 </div>
-
-                <p class="text-muted small">
-                    Record and track all income and expenses.
-                </p>
-
-                <a href="{{ url_for('main.finance_transactions') }}" class="btn btn-light border btn-sm">
-                    Open
-                </a>
-
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- CATEGORIES -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
+    <div class="col-md-4 col-sm-6">
+        <a href="{{ url_for('main.finance_categories') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 clickable-card">
+                <div class="card-body">
 
-                <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-tags fs-4 text-primary me-2"></i>
-                    <h6 class="fw-semibold mb-0">Categories</h6>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-tags fs-4 text-primary me-2"></i>
+                        <h6 class="fw-semibold mb-0">Categories</h6>
+                    </div>
+
+                    <p class="text-muted small">
+                        Manage income and expense categories.
+                    </p>
+
                 </div>
-
-                <p class="text-muted small">
-                    Manage income and expense categories.
-                </p>
-
-                <a href="{{ url_for('main.finance_categories') }}" class="btn btn-light border btn-sm">
-                    Open
-                </a>
-
             </div>
-        </div>
+        </a>
     </div>
 
-    <!-- REPORTS (FUTURE READY) -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 h-100">
+    <!-- REPORTS (DISABLED) -->
+    <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm border-0 h-100 disabled-card">
+
             <div class="card-body">
 
                 <div class="d-flex align-items-center mb-2">
@@ -75,11 +72,12 @@
                     Financial summaries, profit & expense analysis.
                 </p>
 
-                <button class="btn btn-light border btn-sm" disabled>
+                <span class="badge bg-light text-muted">
                     Coming Soon
-                </button>
+                </span>
 
             </div>
+
         </div>
     </div>
 
@@ -90,14 +88,34 @@
 
     <a href="
 {% if current_user.role == 'admin' %}
-    {{ url_for('main.admin_dashboard') }}
+ {{ url_for('main.admin_dashboard') }}
 {% else %}
-    {{ url_for('main.user_dashboard') }}
+ {{ url_for('main.user_dashboard') }}
 {% endif %}
 " class="btn btn-light border">
         ← Back to Dashboard
     </a>
 
 </div>
+
+<!-- STYLES -->
+<style>
+    .clickable-card {
+        transition: all 0.25s ease;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+
+    .clickable-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .disabled-card {
+        opacity: 0.6;
+        border-radius: 12px;
+        cursor: not-allowed;
+    }
+</style>
 
 {% endblock %}

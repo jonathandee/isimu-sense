@@ -18,52 +18,48 @@
 <div class="row g-4">
 
     <!-- FEED TYPES -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
+    <div class="col-md-4 col-sm-6">
+        <a href="{{ url_for('main.feed_types') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 clickable-card">
+                <div class="card-body">
 
-                <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-box-seam fs-4 text-success me-2"></i>
-                    <h6 class="fw-semibold mb-0">Feed Types</h6>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-box-seam fs-4 text-success me-2"></i>
+                        <h6 class="fw-semibold mb-0">Feed Types</h6>
+                    </div>
+
+                    <p class="text-muted small">
+                        Define and manage different types of livestock feed.
+                    </p>
+
                 </div>
-
-                <p class="text-muted small">
-                    Define and manage different types of livestock feed.
-                </p>
-
-                <a href="{{ url_for('main.feed_types') }}" class="btn btn-light border btn-sm">
-                    Open
-                </a>
-
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- FEEDING RECORDS -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
+    <div class="col-md-4 col-sm-6">
+        <a href="{{ url_for('main.feed_records') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 clickable-card">
+                <div class="card-body">
 
-                <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-clipboard-data fs-4 text-primary me-2"></i>
-                    <h6 class="fw-semibold mb-0">Feeding Records</h6>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-clipboard-data fs-4 text-primary me-2"></i>
+                        <h6 class="fw-semibold mb-0">Feeding Records</h6>
+                    </div>
+
+                    <p class="text-muted small">
+                        Track feed consumption and feeding schedules.
+                    </p>
+
                 </div>
-
-                <p class="text-muted small">
-                    Track feed consumption and feeding schedules.
-                </p>
-
-                <a href="{{ url_for('main.feed_records') }}" class="btn btn-light border btn-sm">
-                    Open
-                </a>
-
             </div>
-        </div>
+        </a>
     </div>
 
-    <!-- (FUTURE) FEED REPORTS -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 h-100">
+    <!-- REPORTS (DISABLED) -->
+    <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm border-0 h-100 disabled-card">
 
             <div class="card-body">
 
@@ -76,9 +72,9 @@
                     Analyze feed usage, costs, and efficiency.
                 </p>
 
-                <a href="#" class="btn btn-light border btn-sm disabled">
+                <span class="badge bg-light text-muted">
                     Coming Soon
-                </a>
+                </span>
 
             </div>
 
@@ -92,14 +88,34 @@
 
     <a href="
 {% if current_user.role == 'admin' %}
-    {{ url_for('main.livestock') }}
+ {{ url_for('main.livestock') }}
 {% else %}
-    {{ url_for('main.user_dashboard') }}
+ {{ url_for('main.user_dashboard') }}
 {% endif %}
 " class="btn btn-light border">
         ← Back to Livestock
     </a>
 
 </div>
+
+<!-- STYLES -->
+<style>
+    .clickable-card {
+        transition: all 0.25s ease;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+
+    .clickable-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .disabled-card {
+        opacity: 0.6;
+        border-radius: 12px;
+        cursor: not-allowed;
+    }
+</style>
 
 {% endblock %}

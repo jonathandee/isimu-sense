@@ -17,90 +17,95 @@
 <!-- MODULE GRID -->
 <div class="row g-4">
 
-<!-- ITEMS -->
-<div class="col-md-4">
-    <div class="card shadow-sm border-0 h-100">
-        <div class="card-body">
+    <!-- ITEMS -->
+    <div class="col-md-4 col-sm-6">
+        <a href="{{ url_for('main.inventory_items') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 clickable-card">
+                <div class="card-body">
 
-            <div class="d-flex align-items-center mb-2">
-                <i class="bi bi-box-seam fs-4 text-success me-2"></i>
-                <h6 class="fw-semibold mb-0">Items</h6>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-box-seam fs-4 text-success me-2"></i>
+                        <h6 class="fw-semibold mb-0">Items</h6>
+                    </div>
+
+                    <p class="text-muted small">
+                        Manage inventory stock and quantities.
+                    </p>
+
+                </div>
             </div>
-
-            <p class="text-muted small">
-                Manage inventory stock and quantities.
-            </p>
-
-            <a href="{{ url_for('main.inventory_items') }}"
-               class="btn btn-light border btn-sm">
-                Open
-            </a>
-
-        </div>
+        </a>
     </div>
-</div>
 
-<!-- CATEGORIES -->
-<div class="col-md-4">
-    <div class="card shadow-sm border-0 h-100">
-        <div class="card-body">
+    <!-- CATEGORIES -->
+    <div class="col-md-4 col-sm-6">
+        <a href="{{ url_for('main.inventory_categories') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 clickable-card">
+                <div class="card-body">
 
-            <div class="d-flex align-items-center mb-2">
-                <i class="bi bi-tags fs-4 text-primary me-2"></i>
-                <h6 class="fw-semibold mb-0">Categories</h6>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-tags fs-4 text-primary me-2"></i>
+                        <h6 class="fw-semibold mb-0">Categories</h6>
+                    </div>
+
+                    <p class="text-muted small">
+                        Organize inventory into structured groups.
+                    </p>
+
+                </div>
             </div>
-
-            <p class="text-muted small">
-                Organize inventory into structured groups.
-            </p>
-
-            <a href="{{ url_for('main.inventory_categories') }}"
-               class="btn btn-light border btn-sm">
-                Open
-            </a>
-
-        </div>
+        </a>
     </div>
-</div>
 
-<!-- REPORTS -->
-<div class="col-md-4">
-    <div class="card shadow-sm border-0 h-100">
-        <div class="card-body">
+    <!-- REPORTS -->
+    <div class="col-md-4 col-sm-6">
+        <a href="{{ url_for('main.inventory_reports') }}" class="text-decoration-none">
+            <div class="card shadow-sm border-0 h-100 clickable-card">
+                <div class="card-body">
 
-            <div class="d-flex align-items-center mb-2">
-                <i class="bi bi-bar-chart fs-4 text-warning me-2"></i>
-                <h6 class="fw-semibold mb-0">Reports</h6>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-bar-chart fs-4 text-warning me-2"></i>
+                        <h6 class="fw-semibold mb-0">Reports</h6>
+                    </div>
+
+                    <p class="text-muted small">
+                        View stock insights and low inventory alerts.
+                    </p>
+
+                </div>
             </div>
-
-            <p class="text-muted small">
-                View stock insights and low inventory alerts.
-            </p>
-
-            <a href="{{ url_for('main.inventory_reports') }}"
-               class="btn btn-light border btn-sm">
-                Open
-            </a>
-
-        </div>
+        </a>
     </div>
-</div>
 
 </div>
 
 <!-- BACK BUTTON -->
 <div class="mt-4">
 
-<a href="
+    <a href="
 {% if current_user.role == 'admin' %}
-    {{ url_for('main.admin_dashboard') }}
+ {{ url_for('main.admin_dashboard') }}
 {% else %}
-    {{ url_for('main.user_dashboard') }}
+ {{ url_for('main.user_dashboard') }}
 {% endif %}
 " class="btn btn-light border">
-    ← Back to Dashboard
-</a>
+        ← Back to Dashboard
+    </a>
 
 </div>
+
+<!-- STYLES -->
+<style>
+    .clickable-card {
+        transition: all 0.25s ease;
+        cursor: pointer;
+        border-radius: 12px;
+    }
+
+    .clickable-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+</style>
 
 {% endblock %}
