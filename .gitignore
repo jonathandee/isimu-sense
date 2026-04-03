@@ -7,7 +7,7 @@ instance/
 *.db
 
 # Virtual environment (if you create one later)
-venv/
+isimu_env/
 .env/
 
 # VS Code settings
