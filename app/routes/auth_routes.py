@@ -1,7 +1,9 @@
 import re
 from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_user, logout_user, login_required, current_user
+from .weather_routes import get_forecast
 from sqlalchemy.exc import IntegrityError
+from ..models import Animal, Planting, InventoryItem
 from . import main
 from ..models import User
 from .. import db
@@ -190,27 +192,51 @@ def admin_dashboard():
         abort(403)
 
     from .weather_routes import get_forecast
+    from ..models import Planting, InventoryItem, Animal 
+    from .. import db
 
+    # Weather
     forecast = get_forecast()
     city = "Macheke,ZW"
+
+    crop_count = Planting.query.count()
+    livestock_count = Animal.query.count()  
+    inventory_count = InventoryItem.query.count()
+
+    balance = 0
 
     return render_template(
         "admin_dashboard.html",
         forecast=forecast,
-        city=city
+        city=city,
+        crop_count=crop_count,
+        livestock_count=livestock_count,
+        inventory_count=inventory_count,
+        balance=balance
     )
 
 @main.route("/user/dashboard")
 @login_required
 def user_dashboard():
 
-    from .weather_routes import get_forecast
-
+    # Weather
     forecast = get_forecast()
     city = "Macheke,ZW"
+
+    # ✅ ADD THESE
+    crop_count = Planting.query.count()
+    livestock_count = Animal.query.count()
+    inventory_count = InventoryItem.query.count()
+
+    # Optional
+    balance = 0
 
     return render_template(
         "user_dashboard.html",
         forecast=forecast,
-        city=city
+        city=city,
+        crop_count=crop_count,
+        livestock_count=livestock_count,
+        inventory_count=inventory_count,
+        balance=balance
     )
