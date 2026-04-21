@@ -1,185 +1,111 @@
-.
+🌾 IsimuSense
+IsimuSense is a smart farm management system designed to help farmers efficiently manage crops, livestock, inventory, finances, and operations from a centralized platform.
 
-🌾 Isimu Sense – Farm Management System
-Isimu Sense is a modular farm management system designed to support day‑to‑day agricultural operations.
-The platform integrates crop production, livestock management, inventory tracking, financial records, and reporting into a single application.
+🚀 Overview
+IsimuSense transforms traditional farm management into a data-driven, structured, and scalable system, enabling better decision-making through real-time insights, analytics, and weather integration.
 
-The system was developed using Python (Flask) and PostgreSQL and is currently being used to support real farm operations.
+✨ Features
+🌱 Crops Management
 
-🚜 Features
-Crop Management
-Crop type configuration
+Planting, applications, harvesting
 
-Field management
+Field and crop tracking
 
-Planting records
+🐄 Livestock Management
 
-Input applications (fertilizers, chemicals, etc.)
+Animal registration and tracking
 
-Harvest tracking
+Health, breeding, production monitoring
 
-Operational validations (e.g., planting dates, field conflicts)
+🌾 Feed Management
 
-Livestock Management
-Animal registration
+Feed types and feeding records
 
-Weight tracking
+Nutrition tracking
 
-Feed records
+📦 Inventory Management
 
-Health records
+Stock tracking and categorization
 
-Production tracking
+Usage monitoring
 
-Inventory Management
-Inventory categories
+💰 Finance Module
 
-Stock tracking
+Income and expense tracking
 
-Inventory deduction during farm operations
+Financial overview
 
-Low stock monitoring
+📊 Reports & Analytics
 
-Financial Management
-Income tracking
+Farm performance insights
 
-Expense tracking
+KPI dashboards
 
-Financial categories
+🌤️ Weather Integration
 
-Financial reports
+5-day forecast for planning
 
-Reporting & Analytics
-Crop production reports
+👤 User Management
 
-Livestock reports
+Role-based access (Admin/User)
 
-Inventory reports
+Secure authentication system
 
-Financial summaries
+🧠 System Highlights
+🔐 Secure password hashing & authentication
 
-Farm operational insights
+📱 Responsive, modern UI
 
-Authentication & Security
-User login and logout
+⚡ Clickable dashboard navigation
 
-Password hashing
+📊 Real-time farm statistics
 
-Role support (admin / user)
+🧩 Modular architecture (Flask-based)
 
-Blueprint‑level access control
+🛠️ Tech Stack
+Backend: Flask, SQLAlchemy
 
-🧱 System Architecture
-The application follows a modular Flask architecture.
+Frontend: HTML, CSS, Bootstrap 5
 
-isimu_sense
-│
-├── app
-│   ├── routes
-│   │   ├── crop_routes.py
-│   │   ├── livestock_routes.py
-│   │   ├── inventory_routes.py
-│   │   ├── finance_routes.py
-│   │   ├── report_routes.py
-│   │   └── auth_routes.py
-│   │
-│   ├── templates
-│   ├── static
-│   ├── models.py
-│   └── __init__.py
-│
-├── migrations
-├── run.py
-├── requirements.txt
-└── README.md
-🗄 Database
-The system uses PostgreSQL with SQLAlchemy ORM.
+Database: SQLite (default)
 
-Database migrations are handled using:
-
-Flask‑Migrate (Alembic)
-This allows safe schema changes without losing operational data.
+Other: Flask-Login, Flask-Migrate
 
 ⚙️ Installation
-1️⃣ Clone the repository
-git clone https://github.com/YOUR_USERNAME/isimu_sense.git
-cd isimu_sense
-2️⃣ Install dependencies
+git clone https://github.com/your-username/isimusense.git
+cd isimusense
+
 pip install -r requirements.txt
-3️⃣ Configure PostgreSQL
-Create a database:
 
-createdb isimu_sense
-Update database URI if necessary:
-
-postgresql://localhost/isimu_sense
-4️⃣ Run database migrations
 flask db upgrade
-5️⃣ Run the application
-python run.py
-Open in browser:
+flask run
+🔑 Default Access
+Create an admin user via the system or Flask shell.
 
-http://127.0.0.1:5000
-👤 Create Admin User
-Run:
+🏷️ Version
+v1.1
 
-python create_admin.py
-Then login using the admin credentials.
+Dashboard UI overhaul
 
-🔐 Data Integrity Rules
-Operational records are not deleted to preserve historical farm data.
+Clickable card navigation
 
-Editable operational records include:
+Weather integration
 
-plantings
+Improved authentication system
 
-applications
+Modular system structure
 
-harvest records
+🌍 Vision
+IsimuSense aims to evolve into a smart agricultural decision platform, incorporating:
 
-financial transactions
+📊 Advanced analytics
 
-livestock records
+🔔 Smart alerts (weather, stock, health)
 
-Configuration records that can be modified include:
+🤖 AI-driven farming recommendations
 
-crop types
+🌐 Multi-user / multi-farm SaaS support
 
-fields
-
-inventory categories
-
-🛠 Technology Stack
-Python
-
-Flask
-
-PostgreSQL
-
-SQLAlchemy
-
-Flask‑Migrate
-
-Bootstrap
-
-Git
-
-📦 Current Status
-Version: V1.0
-Status: Operational
-Deployment: Local farm system
-The system is currently undergoing operational testing before further enhancements in V1.1.
-
-🌱 Future Improvements (Planned)
-Farm dashboard analytics
-
-Inventory alerts
-
-Data export (CSV / Excel)
-
-Mobile‑friendly interface
-
-👨‍🌾 Author
-Developed by JonathanD_Agri_Tec
-Farm Management System Developer & Agricultural Operator
+📌 Status
+🚧 Actively in development — moving toward production-grade system.
 
