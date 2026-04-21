@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="fw-bold">👨‍💼 Admin</h1>
+    <span class="text-muted">System Control Panel</span>
+</div>
+
+<!-- MODULE CARDS -->
+<div class="row g-4">
+
+    <!-- Crops -->
+    <div class="col-md-4">
+        <a href="{{ url_for('main.crops') }}" class="text-decoration-none">
+            <div class="card elite-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>🌽 Crops</h5>
+                        <span class="badge bg-success-subtle text-success">Live</span>
+                    </div>
+                    <p class="text-muted small mt-2">Manage crop production and tracking</p>
+                    <h4 class="fw-bold mt-3">{{ crop_count or 0 }}</h4>
+                    <small class="text-muted">Active Crops</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Livestock -->
+    <div class="col-md-4">
+        <a href="{{ url_for('main.livestock') }}" class="text-decoration-none">
+            <div class="card elite-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>🐄 Livestock</h5>
+                        <span class="badge bg-danger-subtle text-danger">Live</span>
+                    </div>
+                    <p class="text-muted small mt-2">Track animals and production</p>
+                    <h4 class="fw-bold mt-3">{{ livestock_count or 0 }}</h4>
+                    <small class="text-muted">Total Animals</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Inventory -->
+    <div class="col-md-4">
+        <a href="{{ url_for('main.inventory') }}" class="text-decoration-none">
+            <div class="card elite-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>📦 Inventory</h5>
+                        <span class="badge bg-primary-subtle text-primary">Stock</span>
+                    </div>
+                    <p class="text-muted small mt-2">Manage stock and supplies</p>
+                    <h4 class="fw-bold mt-3">{{ inventory_count or 0 }}</h4>
+                    <small class="text-muted">Items Available</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Finance -->
+    <div class="col-md-4">
+        <a href="{{ url_for('main.finance') }}" class="text-decoration-none">
+            <div class="card elite-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>💰 Finance</h5>
+                        <span class="badge bg-success-subtle text-success">Balance</span>
+                    </div>
+                    <p class="text-muted small mt-2">Monitor income & expenses</p>
+                    <h4 class="fw-bold mt-3">${{ balance or 0 }}</h4>
+                    <small class="text-muted">Current Balance</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Reports -->
+    <div class="col-md-4">
+        <a href="{{ url_for('main.reports') }}" class="text-decoration-none">
+            <div class="card elite-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5>📊 Reports</h5>
+                        <span class="badge bg-warning-subtle text-warning">Insights</span>
+                    </div>
+                    <p class="text-muted small mt-2">Analytics & performance</p>
+                    <h4 class="fw-bold mt-3">Ready</h4>
+                    <small class="text-muted">Data Insights</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Manage Users -->
+    <div class="col-md-4">
+        <a href="{{ url_for('main.manage_users') }}" class="text-decoration-none">
+            <div class="card elite-card border-danger h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-danger">👑 Users</h5>
+                        <span class="badge bg-danger-subtle text-danger">Admin</span>
+                    </div>
+                    <p class="text-muted small mt-2">Manage system users</p>
+                    <h4 class="fw-bold mt-3">Control</h4>
+                    <small class="text-danger">Restricted Access</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+</div>
+
+<!-- WEATHER -->
+<div class="card elite-card mt-5">
+    <div class="card-body">
+
+        <h5 class="mb-4">
+            🌤️ Weather Forecast
+            <span class="text-muted small">- {{ city }}</span>
+        </h5>
+
+        <div class="row text-center">
+
+            {% for day in forecast %}
+            <div class="col">
+
+                <div class="weather-card p-3">
+
+                    <h6 class="fw-semibold mb-1">{{ day.day }}</h6>
+                    <small class="text-muted">{{ day.date }}</small>
+
+                    <img src="http://openweathermap.org/img/wn/{{ day.icon }}@2x.png">
+
+                    <h5 class="fw-bold mt-2">{{ day.temp }}°C</h5>
+                    <small class="text-muted text-capitalize">{{ day.weather }}</small>
+
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+</div>
+
+<!-- STYLES -->
+<style>
+    .elite-card {
+        border: none;
+        border-radius: 14px;
+        background: linear-gradient(145deg, #ffffff, #f1f5f9);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        transition: all 0.25s ease;
+        cursor: pointer;
+    }
+
+    .elite-card:hover {
+        transform: translateY(-6px) scale(1.01);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    .weather-card {
+        border-radius: 12px;
+        background: #f8fafc;
+        transition: 0.2s;
+    }
+
+    .weather-card:hover {
+        background: #e2e8f0;
+    }
+
+    .badge {
+        font-size: 0.7rem;
+        padding: 5px 8px;
+        border-radius: 8px;
+    }
+</style>
+
+{% endblock %}

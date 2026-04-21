@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}Livestock Reports{% endblock %}
+{% block page_title %}Livestock Reports{% endblock %}
+
+{% block content %}
+
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Livestock Reports 🐄</h4>
+    <p class="text-muted small mb-0">
+        Monitor livestock production, health, feeding, and breeding performance.
+    </p>
+</div>
+
+<!-- SUMMARY -->
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted small">Total Production</h6>
+                <h3 class="fw-bold text-success">{{ total_production }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted small">Average Weight</h6>
+                <h3 class="fw-bold">{{ avg_weight }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted small">Total Feed Used</h6>
+                <h3 class="fw-bold">{{ total_feed }}</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- CHARTS -->
+<div class="row g-4">
+
+    <!-- PRODUCTION -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+
+                <h6 class="fw-semibold mb-3">Production Overview</h6>
+
+                <canvas id="productionChart"></canvas>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- WEIGHT -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+
+                <h6 class="fw-semibold mb-3">Weight Tracking</h6>
+
+                <canvas id="weightChart"></canvas>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- DATA TABLES -->
+<div class="row g-4 mt-1">
+
+    <!-- HEALTH -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body">
+
+                <h6 class="fw-semibold mb-3">Recent Health Records</h6>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+                            <tr class="small text-muted">
+                                <th>Animal</th>
+                                <th>Condition</th>
+                                <th>Treatment</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for record in health_records %}
+
+                            <tr>
+                                <td class="fw-semibold">{{ record.animal.tag_number }}</td>
+                                <td>{{ record.condition or "-" }}</td>
+                                <td>{{ record.treatment or "-" }}</td>
+                                <td>{{ record.date }}</td>
+                            </tr>
+
+                            {% else %}
+
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    No health records available
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- BREEDING -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body">
+
+                <h6 class="fw-semibold mb-3">Breeding Activity</h6>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+                            <tr class="small text-muted">
+                                <th>Male</th>
+                                <th>Female</th>
+                                <th>Date</th>
+                                <th>Expected Birth</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for event in breeding_events %}
+
+                            <tr>
+                                <td>
+                                    {% if event.male %}
+                                    {{ event.male.tag_number }}
+                                    {% else %}
+                                    <span class="text-muted">AI</span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="fw-semibold">
+                                    {{ event.female.tag_number }}
+                                </td>
+
+                                <td>{{ event.breeding_date }}</td>
+
+                                <td>
+                                    {% if event.expected_birth %}
+                                    {{ event.expected_birth }}
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            {% else %}
+
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    No breeding records available
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- BACK -->
+<div class="mt-4">
+    <a href="{{ url_for('main.reports') }}" class="btn btn-light border">
+        ← Back to Reports
+    </a>
+</div>
+
+<!-- CHARTS -->
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        /* PRODUCTION CHART */
+        let prodLabels = [];
+        let prodValues = [];
+
+        {% for p in productions %}
+        prodLabels.push("{{ p.product }}");
+        prodValues.push({{ p.quantity }});
+    {% endfor %}
+
+    new Chart(document.getElementById("productionChart"), {
+        type: "bar",
+        data: {
+            labels: prodLabels,
+            datasets: [{
+                label: "Production",
+                data: prodValues,
+                backgroundColor: "rgba(40,167,69,0.7)"
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    /* WEIGHT CHART */
+    let weightLabels = [];
+    let weightValues = [];
+
+    {% for w in weights %}
+    weightLabels.push("{{ w.animal.tag_number }}");
+    weightValues.push({{ w.weight }});
+    {% endfor %}
+
+    new Chart(document.getElementById("weightChart"), {
+        type: "line",
+        data: {
+            labels: weightLabels,
+            datasets: [{
+                label: "Weight",
+                data: weightValues,
+                borderColor: "#28a745",
+                tension: 0.3,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+});
+
+</script>
+
+{% endblock %}

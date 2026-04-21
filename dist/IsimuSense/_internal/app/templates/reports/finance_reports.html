@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}Finance Reports{% endblock %}
+{% block page_title %}Finance Reports{% endblock %}
+
+{% block content %}
+
+<!-- HEADER -->
+<div class="mb-4">
+    <h4 class="fw-semibold">Finance Reports 💰</h4>
+    <p class="text-muted small mb-0">
+        Analyze farm income, expenses, and profitability.
+    </p>
+</div>
+
+<!-- SUMMARY CARDS -->
+<div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted small">Total Income</h6>
+                <h3 class="fw-bold text-success">{{ income }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted small">Total Expenses</h6>
+                <h3 class="fw-bold text-danger">{{ expenses }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 text-center">
+            <div class="card-body">
+                <h6 class="text-muted small">Net Profit</h6>
+
+                {% if profit >= 0 %}
+                <h3 class="fw-bold text-success">{{ profit }}</h3>
+                {% else %}
+                <h3 class="fw-bold text-danger">{{ profit }}</h3>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="row g-4">
+
+    <!-- TRANSACTIONS -->
+    <div class="col-lg-7">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body">
+
+                <h6 class="fw-semibold mb-3">Transaction History</h6>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-light">
+                            <tr class="small text-muted">
+                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for t in transactions %}
+
+                            <tr>
+                                <td>
+                                    {% if t.type == "income" %}
+                                    <span class="badge bg-success">Income</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Expense</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ t.category.name }}</td>
+                                <td>{{ t.description or "-" }}</td>
+
+                                <td class="fw-semibold">
+                                    {% if t.type == "income" %}
+                                    <span class="text-success">+{{ t.amount }}</span>
+                                    {% else %}
+                                    <span class="text-danger">-{{ t.amount }}</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>{{ t.date }}</td>
+                            </tr>
+
+                            {% else %}
+
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    No transactions recorded
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CHART -->
+    <div class="col-lg-5">
+
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-body">
+
+                <h6 class="fw-semibold mb-3">Financial Overview</h6>
+
+                <canvas id="financeChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- BACK -->
+<div class="mt-4">
+    <a href="{{ url_for('main.reports') }}" class="btn btn-light border">
+        ← Back to Reports
+    </a>
+</div>
+
+<!-- CHART -->
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        new Chart(document.getElementById("financeChart"), {
+
+            type: "doughnut",
+
+            data: {
+                labels: ["Income", "Expenses"],
+                datasets: [{
+                    data: [{{ income }}, {{ expenses }}],
+            backgroundColor: [
+                "#28a745",
+                "#dc3545"
+            ]
+        }]
+        },
+
+        options: {
+        responsive: true,
+        cutout: "60%",
+        plugins: {
+            legend: {
+                position: "bottom"
+            }
+        }
+    }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

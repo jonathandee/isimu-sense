@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from dotenv import load_dotenv
-import os
+
+from config import ProductionConfig  
 
 load_dotenv()
 
@@ -15,7 +16,8 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
 
-    app.config.from_object("config.ProductionConfig")
+
+    app.config.from_object(ProductionConfig)
 
     db.init_app(app)
     login_manager.init_app(app)
@@ -23,6 +25,7 @@ def create_app():
 
     login_manager.login_view = "main.login"
 
+    #REGISTER BLUEPRINTS
     from .routes import main
     app.register_blueprint(main)
 
