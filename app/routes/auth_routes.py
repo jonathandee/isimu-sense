@@ -20,7 +20,7 @@ def is_strong_password(password):
 @login_required
 def manage_users():
 
-    # ✅ Only admin access
+    #Only admin access
     if current_user.role != "admin":
         flash("Access denied", "danger")
         return redirect(url_for("main.user_dashboard"))
@@ -31,17 +31,17 @@ def manage_users():
         confirm_password = request.form.get("confirm_password")
         role = request.form.get("role")
 
-        # ✅ Basic validation
+        #Basic validation
         if not username or not password:
             flash("Username and password are required", "danger")
             return redirect(url_for("main.manage_users"))
 
-        # ✅ Confirm password check
+        #Confirm password check
         if password != confirm_password:
             flash("Passwords do not match", "danger")
             return redirect(url_for("main.manage_users"))
 
-        # ✅ Strong password validation
+        #Strong password validation
         if not is_strong_password(password):
             flash(
                 "Password must be at least 8 characters and include uppercase, lowercase, number, and special character",
@@ -49,13 +49,13 @@ def manage_users():
             )
             return redirect(url_for("main.manage_users"))
 
-        # ✅ Check duplicate username
+        #Check duplicate username
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             flash("Username already exists", "danger")
             return redirect(url_for("main.manage_users"))
 
-        # ✅ Create user
+        #Create user
         user = User(username=username, role=role)
         user.set_password(password)
 
@@ -70,7 +70,7 @@ def manage_users():
 
         return redirect(url_for("main.manage_users"))
 
-    # ✅ GET request
+    #GET request
     users = User.query.all()
     return render_template("manage_users.html", users=users)
 
@@ -144,7 +144,7 @@ def delete_user(id):
 @main.route("/", methods=["GET", "POST"])
 def login():
 
-    # ✅ Prevent redirect loop if already logged in
+    #Prevent redirect loop if already logged in
     if current_user.is_authenticated:
         if current_user.role == "admin":
             return redirect(url_for("main.admin_dashboard"))
@@ -219,17 +219,15 @@ def admin_dashboard():
 @login_required
 def user_dashboard():
 
-    # Weather
+    #Weather
     forecast = get_forecast()
     city = "Macheke,ZW"
 
-    # ✅ ADD THESE
     crop_count = Planting.query.count()
     livestock_count = Animal.query.count()
     inventory_count = InventoryItem.query.count()
 
-    # Optional
-    balance = 0
+    #balance = 0
 
     return render_template(
         "user_dashboard.html",

@@ -32,7 +32,7 @@ def finance_transactions():
         date = request.form.get("date")
         notes = request.form.get("notes")
 
-        # Basic validation
+        #Basic validation
         if not type or not category_id or not amount or not date:
             return redirect(url_for("main.finance_transactions"))
 

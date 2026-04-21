@@ -45,7 +45,7 @@ def crop_types():
         crops=crops
     )
 
-# EDIT CROP TYPE
+#EDIT CROP TYPE
 @main.route("/crops/types/edit/<int:id>", methods=["POST"])
 @login_required
 def edit_crop_type(id):
@@ -60,7 +60,7 @@ def edit_crop_type(id):
 
     return redirect(url_for("main.crop_types"))
 
-# DELETE CROP TYPE
+#DELETE CROP TYPE
 @main.route("/crops/types/delete/<int:id>")
 @login_required
 def delete_crop_type(id):
@@ -104,7 +104,7 @@ def fields():
         fields=fields
     )
 
-# EDIT FIELD
+#EDIT FIELD
 @main.route("/crops/fields/edit/<int:id>", methods=["POST"])
 @login_required
 def edit_field(id):
@@ -119,7 +119,7 @@ def edit_field(id):
 
     return redirect(url_for("main.fields"))
 
-# DELETE FIELD
+#DELETE FIELD
 @main.route("/crops/fields/delete/<int:id>")
 @login_required
 def delete_field(id):
@@ -187,7 +187,7 @@ def plantings():
         fields=fields
     )
 
-# COMPLETE PLANTING
+#COMPLETE PLANTING
 @main.route("/crops/plantings/complete/<int:id>")
 @login_required
 def complete_planting(id):

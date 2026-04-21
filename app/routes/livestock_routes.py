@@ -284,7 +284,7 @@ def exits():
         animals=animals
     )
     
-    ################################################
+################################################
 # BREEDING
 ################################################
 
@@ -516,7 +516,10 @@ def feed_types():
         "livestock/feed_types.html",
         feed_types=feed_types
     )
-
+    
+#################
+# FEED TYPES
+#################
 
 @main.route("/livestock/feed-types/edit/<int:id>", methods=["POST"])
 def edit_feed_type(id):

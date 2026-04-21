@@ -6,23 +6,23 @@ main = Blueprint("main", __name__)
 @main.before_request
 def require_login():
 
-    # ✅ Skip static files
+    # Skip static files
     if request.endpoint == "static":
         return
 
-    # ✅ Skip if endpoint is missing (prevents crash/loop)
+    # Skip if endpoint is missing (prevents crash/loop)
     if request.endpoint is None:
         return
 
-    # ✅ Allow login route
+    # Allow login route
     if request.endpoint == "main.login":
         return
 
-    # ✅ Allow logout
+    # Allow logout
     if request.endpoint == "main.logout":
         return
 
-    # ✅ If not logged in → redirect
+    # If not logged in → redirect
     if not current_user.is_authenticated:
         return redirect(url_for("main.login"))
 
