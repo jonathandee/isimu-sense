@@ -5,10 +5,8 @@ from flask_migrate import Migrate
 from dotenv import load_dotenv
 import os
 
-# Load environment variables
 load_dotenv()
 
-# Extensions
 db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
@@ -17,29 +15,19 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
 
-    # ✅ Load config FIRST
-    env = os.getenv("FLASK_ENV", "development")
+    app.config.from_object("config.ProductionConfig")
 
-    if env == "production":
-        app.config.from_object("config.ProductionConfig")
-    else:
-        app.config.from_object("config.DevelopmentConfig")
-
-    # ✅ Initialize extensions
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
 
     login_manager.login_view = "main.login"
 
-    # ✅ Register blueprint
     from .routes import main
     app.register_blueprint(main)
 
-    # ✅ Import models AFTER db init
     from .models import Planting, Harvest, InventoryItem, Field
 
-    # ✅ CONTEXT PROCESSOR (THIS IS THE FIX)
     @app.context_processor
     def inject_stats():
         return {
@@ -52,9 +40,7 @@ def create_app():
     return app
 
 
-# ✅ Import User AFTER db is defined
 from .models import User
-
 
 @login_manager.user_loader
 def load_user(user_id):

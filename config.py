@@ -4,8 +4,8 @@ class Config:
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = "postgresql://localhost/isimu_sense_prod"
+    SQLALCHEMY_DATABASE_URI = "postgresql://jonathandangeni@localhost/isimu_sense_prod"
 
 
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI = "postgresql://localhost/isimu_sense_dev"
+    SQLALCHEMY_DATABASE_URI = "postgresql://jonathandangeni@localhost/isimu_sense_dev"
