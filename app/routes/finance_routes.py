@@ -20,24 +20,21 @@ def finance():
 
 @main.route("/finance/transactions", methods=["GET", "POST"])
 def finance_transactions():
-
     categories = FinanceCategory.query.all()
 
     if request.method == "POST":
-
-        type = request.form.get("type")
+        type_ = request.form.get("type")
         category_id = request.form.get("category")
         description = request.form.get("description")
         amount = request.form.get("amount")
         date = request.form.get("date")
         notes = request.form.get("notes")
 
-        #Basic validation
-        if not type or not category_id or not amount or not date:
+        if not type_ or not category_id or not amount or not date:
             return redirect(url_for("main.finance_transactions"))
 
         transaction = FinanceTransaction(
-            type=type,
+            type=type_,
             category_id=category_id,
             description=description,
             amount=amount,
@@ -59,6 +56,38 @@ def finance_transactions():
         transactions=transactions,
         categories=categories
     )
+
+###### EDIT TRANSACTION #######
+
+@main.route("/finance/transactions/edit/<int:id>", methods=["POST"])
+def edit_finance_transaction(id):
+    transaction = FinanceTransaction.query.get_or_404(id)
+
+    type_ = request.form.get("type")
+    category_id = request.form.get("category")
+    description = request.form.get("description")
+    amount = request.form.get("amount")
+    date = request.form.get("date")
+    notes = request.form.get("notes")
+
+    if not type_ or not category_id or not amount or not date:
+        return redirect(url_for("main.finance_transactions"))
+
+    try:
+        amount = float(amount)
+    except ValueError:
+        return redirect(url_for("main.finance_transactions"))
+
+    transaction.type = type_
+    transaction.category_id = category_id
+    transaction.description = description
+    transaction.amount = amount
+    transaction.date = date
+    transaction.notes = notes
+
+    db.session.commit()
+
+    return redirect(url_for("main.finance_transactions"))
 
 
 ################################################

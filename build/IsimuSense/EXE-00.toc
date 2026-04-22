@@ -59,7 +59,7 @@
  [],
  False,
  False,
- 1776808223,
+ 1776851507,
  [('runw',
    '/Users/jonathandangeni/isimu_sense/isimu_env/lib/python3.12/site-packages/PyInstaller/bootloader/Darwin-64bit/runw',
    'EXECUTABLE')],
